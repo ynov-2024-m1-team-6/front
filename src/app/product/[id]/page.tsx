@@ -1,4 +1,6 @@
 import Card from "@/components/card";
+import Footer from "@/layout/footer";
+import NavBar from "@/layout/navbar";
 
 export default function Index() {
   const product = {
@@ -15,13 +17,21 @@ export default function Index() {
   };
 
   return (
-    <div className="min-h-screen flex justify-center">
-      <section
-        id="Projects"
-        className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5"
-      >
+    <>
+      <NavBar />
+      <div className="min-h-screen flex justify-center my-10 gap-10">
         <Card product={product} />
-      </section>
-    </div>
+        <div>
+          <span className="flex items-center">
+            <i className="w-2 h-2 bg-green-600 rounded-full mr-2"></i>
+            Disponible
+          </span>
+          <p>{product.description}</p>
+          <p>Taille: {product.height}cm</p>
+          <p>Poids: {product.weight}kg</p>
+        </div>
+      </div>
+      <Footer />
+    </>
   );
 }
