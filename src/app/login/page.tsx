@@ -2,16 +2,26 @@
 
 import Button from "@/components/button";
 import Input from "@/components/input";
+import connectionValidators from "@/services/validators/connectionValidator";
 import { useState } from "react";
 
 export default function Login() {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [error, setError] = useState<string | null>();
 
   const onSubmit = () => {
-    console.log("call to api with params:");
-    console.log(`email: ${email}`);
-    console.log(`password: ${password}`);
+    const error = connectionValidators.isLoginFormValid({
+      email,
+      password,
+    });
+
+    if (!error) {
+      console.log("call to api with params:");
+      console.log(`email: ${email}`);
+      console.log(`password: ${password}`);
+    }
+    setError(error);
   };
 
   return (
@@ -31,7 +41,7 @@ export default function Login() {
 
           <Button title="Se connecter" onClick={onSubmit} />
         </form>
-
+        {error && <p className="text-red-600">{error}</p>}
         <p className="mt-5 text-center text-sm text-gray-500">
           <a
             href="/"

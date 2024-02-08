@@ -2,6 +2,8 @@
 
 import Button from "@/components/button";
 import Input from "@/components/input";
+import connectionValidators from "@/services/validators/connectionValidator";
+import isRegisterFormValid from "@/services/validators/connectionValidator";
 import { useState } from "react";
 
 export default function Login() {
@@ -9,13 +11,24 @@ export default function Login() {
   const [firstname, setFirstname] = useState<string>();
   const [lastname, setLastname] = useState<string>();
   const [password, setPassword] = useState<string>();
+  const [error, setError] = useState<string | null>();
 
   const onSubmit = () => {
-    console.log("call to api with params:");
-    console.log(`email: ${email}`);
-    console.log(`firstname: ${firstname}`);
-    console.log(`lastname: ${lastname}`);
-    console.log(`password: ${password}`);
+    const error = connectionValidators.isRegisterFormValid({
+      firstname,
+      lastname,
+      email,
+      password,
+    });
+
+    if (!error) {
+      console.log("call to api with params:");
+      console.log(`email: ${email}`);
+      console.log(`firstname: ${firstname}`);
+      console.log(`lastname: ${lastname}`);
+      console.log(`password: ${password}`);
+    }
+    setError(error);
   };
 
   return (
@@ -28,8 +41,9 @@ export default function Login() {
           </div>
           <Input title="Email" name="email" onChange={setEmail} />
           <Input title="Mot de passe" name="password" onChange={setPassword} />
-          <Button title="S'inscrire" type="submit" onClick={onSubmit} />
+          <Button title="S'inscrire" onClick={onSubmit} />
         </form>
+        {error && <p className="text-red-600">{error}</p>}
         <p className="mt-5 text-center text-sm text-gray-500">
           <a
             href="/"
