@@ -5,7 +5,7 @@ import Input from "@/components/input";
 import connectionValidators from "@/services/validators/connectionValidator";
 import { useState } from "react";
 
-export default function Login() {
+export default function Index() {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string | null>();

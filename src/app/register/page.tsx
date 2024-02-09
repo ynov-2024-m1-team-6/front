@@ -3,10 +3,9 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import connectionValidators from "@/services/validators/connectionValidator";
-import isRegisterFormValid from "@/services/validators/connectionValidator";
 import { useState } from "react";
 
-export default function Login() {
+export default function Index() {
   const [email, setEmail] = useState<string>();
   const [firstname, setFirstname] = useState<string>();
   const [lastname, setLastname] = useState<string>();
