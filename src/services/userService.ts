@@ -4,14 +4,19 @@ import { User } from "@/models/user";
 import { jwtDecode } from "jwt-decode";
 
 const currentUser = (): User | null => {
-  if (localStorage) {
-    const token = localStorage.getItem("token");
-    if (!token || token === undefined || token === "undefined") {
-      return null;
+  try {
+    if (localStorage) {
+      const token = localStorage.getItem("token");
+      if (!token || token === undefined || token === "undefined") {
+        return null;
+      }
+      return jwtDecode<User>(token);
     }
-    return jwtDecode<User>(token);
+    return null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
   }
-  return null;
 };
 
 const isAdmin = (): boolean => {
