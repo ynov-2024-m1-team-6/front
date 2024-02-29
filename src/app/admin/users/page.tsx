@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalUser";
@@ -14,7 +14,11 @@ export interface User {
   city: string;
 }
 
-const usersData = [
+
+
+
+
+/*const usersData = [
   {
     id: 1,
     firstName: "John",
@@ -285,12 +289,30 @@ const usersData = [
     zipCode: "54321",
     city: "Northville",
   },
-];
+];*/
 
 const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [usersData, setUserData] = useState<User[]>([]);
+  
+
+  useEffect(() => {
+    const getUser = async () => {
+      const res = await fetch("https://api-mystore.onrender.com/user" , {
+      method: "GET",
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+      const usersData = await res.json();
+      console.log(usersData);
+      return setUserData(usersData);
+    };
+    getUser();
+  }, [usersData]);
+
 
   const filteredUsers =
     searchTerm.length === 0

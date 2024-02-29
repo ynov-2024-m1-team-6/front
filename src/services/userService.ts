@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 const currentUser = (): User | null => {
   const token = localStorage.getItem("token");
-  if (!token) {
+  if (!token || token === undefined || token === "undefined") {
     return null;
   }
   return jwtDecode<User>(token);
