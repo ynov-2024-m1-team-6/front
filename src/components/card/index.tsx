@@ -1,13 +1,60 @@
+"use client";
+
 import { Product } from "@/models/product";
+import UserService from "@/services/userService";
 import Image from "next/image";
+import { MdDelete } from "react-icons/md";
 
 interface Props {
   product: Product;
+  isWishlist: boolean;
 }
 
-const Card = ({ product }: Props) => {
+const Card = ({ product, isWishlist }: Props) => {
+  const addToWishlist = () => {
+    const token = UserService.getToken();
+    const user = UserService.currentUser();
+
+    if (!user || !token) {
+      return;
+    }
+
+    const request = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id: product.id,
+      }),
+    };
+
+    fetch("https://api-mystore.onrender.com/wishlist/addItem", request);
+  };
+
+  const removeFromWishlist = () => {
+    const token = UserService.getToken();
+    const user = UserService.currentUser();
+
+    if (!user || !token) {
+      return;
+    }
+
+    const request = {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        id: product.id,
+      }),
+    };
+
+    fetch("https://api-mystore.onrender.com/wishlist/removeItem", request);
+  };
+
   return (
-    <div className="w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
+    <div className="relative w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
       <a href={`product/${product.id}`}>
         <Image
           src={product.thumbnail}
@@ -47,6 +94,21 @@ const Card = ({ product }: Props) => {
           </div>
         </div>
       </a>
+      {isWishlist ? (
+        <div
+          onClick={() => removeFromWishlist()}
+          className="absolute top-2 right-2 cursor-pointer"
+        >
+          <MdDelete width={48} height={48} color="red" />
+        </div>
+      ) : (
+        <div
+          onClick={() => addToWishlist()}
+          className="absolute top-2 right-2 cursor-pointer"
+        >
+          <Image src="/heart.svg" alt="Icon 3" width={24} height={24} />
+        </div>
+      )}
     </div>
   );
 };

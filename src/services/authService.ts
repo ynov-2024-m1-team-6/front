@@ -24,8 +24,6 @@ const login = async (
         },
       }
     );
-    console.log(response.status); // Vérifiez le code de statut HTTP
-    console.log(await response.json()); // Imprimez la réponse pour voir l'erreur
 
     const responseJson = await response.json();
     if (!response.ok) {
