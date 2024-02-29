@@ -4,14 +4,16 @@ import { Product } from "@/models/product";
 import UserService from "@/services/userService";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { CiHeart } from "react-icons/ci";
+import { FaHeart } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 
 interface Props {
   product: Product;
-  isWishlist: boolean;
+  isInWishlist: boolean;
 }
 
-const Card = ({ product, isWishlist }: Props) => {
+const Card = ({ product, isInWishlist }: Props) => {
   const router = useRouter();
 
   const addToWishlist = async () => {
@@ -112,19 +114,19 @@ const Card = ({ product, isWishlist }: Props) => {
           </div>
         </div>
       </a>
-      {isWishlist ? (
+      {isInWishlist ? (
         <div
           onClick={() => removeFromWishlist()}
           className="absolute top-2 right-2 cursor-pointer"
         >
-          <MdDelete width={48} height={48} color="red" />
+          <FaHeart width={48} height={48} color="red" />
         </div>
       ) : (
         <div
           onClick={() => addToWishlist()}
           className="absolute top-2 right-2 cursor-pointer"
         >
-          <Image src="/heart.svg" alt="Icon 3" width={24} height={24} />
+          <CiHeart width={48} height={48} />
         </div>
       )}
     </div>

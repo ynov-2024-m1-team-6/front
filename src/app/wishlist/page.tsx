@@ -5,39 +5,29 @@ import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
 import { Product } from "@/models/product";
 import UserService from "@/services/userService";
+import WishlistService from "@/services/wishlistService";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Index() {
-  const [products, setProducts] = useState<Product[]>();
+  const [wishlist, setWishlist] = useState<Product[]>();
   const router = useRouter();
 
   const [isConnected, setIsConnected] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
-  const getProducts = async () => {
-    const token = UserService.getToken();
-
-    const response = await fetch(
-      "https://api-mystore.onrender.com/wishlist/getWishlist",
-      {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-    if (!response.ok) {
-      return null;
+  const getWishlist = async () => {
+    const wishlist = await WishlistService.getWishlist();
+    if (wishlist) {
+      setWishlist(wishlist);
     }
-    const responseJson = await response.json();
-
-    setProducts(responseJson);
   };
 
   useEffect(() => {
     setIsConnected(!!UserService.currentUser());
     setIsLoading(false);
 
-    getProducts();
+    getWishlist();
   }, []);
 
   useEffect(() => {
@@ -55,9 +45,9 @@ export default function Index() {
           id="Projects"
           className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5"
         >
-          {products &&
-            products.map((prod, index) => {
-              return <Card key={index} product={prod} isWishlist={true} />;
+          {wishlist &&
+            wishlist.map((prod, index) => {
+              return <Card key={index} product={prod} isInWishlist={true} />;
             })}
         </section>
       </div>
