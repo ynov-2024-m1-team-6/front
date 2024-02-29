@@ -1,48 +1,83 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+
+export interface User {
+  id: number;
+  firstName: string;
+  name: string;
+  mail: string;
+  adress: string;
+  zipCode: string;
+  city: string;
+  phoneNumber: string;
+}
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   userData: {
+    id: number;
     firstName?: string;
-    lastName?: string;
-    email?: string;
-    address?: string;
+    name?: string;
+    mail?: string;
+    adress?: string;
     zipCode?: string;
+    phoneNumber?: string;
     city?: string;
   };
 }
 
 const ModalUser = ({ onClose, isOpen, userData }: Props) => {
-  interface Props {
-    isOpen: boolean;
-    onClose: () => void;
-    userData: {
-      firstName?: string;
-      lastName?: string;
-      email?: string;
-      address?: string;
-      zipCode?: string;
-      city?: string;
-    };
-  }
+  console.log(userData);
+  const [formData, setFormData] = useState<User>({
+    id: 0,
+    firstName: "",
+    name: "",
+    mail: "",
+    adress: "",
+    zipCode: "",
+    phoneNumber: "",
+    city: "",
+  });
+
+  useEffect(() => {
+    setFormData(userData as User);
+  }, []);
+
+  const updateData = async (id: number) => {
+    console.log("updateData");
+    const res = await fetch(
+      `https://back-office-mkrp.onrender.com/user/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      }
+    );
+    setValide(true);
+    if (res.ok) {
+      closeModal();
+      setTimeout(() => {
+        setValide(false);
+      }, 3000);
+    }
+  };
 
   const [valide, setValide] = useState(false);
+
+  const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+    console.log(formData);
+  };
 
   const closeModal = () => {
     onClose();
   };
 
   if (!isOpen || !userData) return null;
-
-  const {
-    firstName = "",
-    lastName = "",
-    email = "",
-    address = "",
-    zipCode = "",
-    city = "",
-  } = userData;
 
   return (
     <div
@@ -95,9 +130,10 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
                     placeholder="Doe"
-                    id="lastName"
-                    defaultValue={lastName}
+                    id="name"
+                    defaultValue={userData.name}
                     required
+                    onChange={onChangeForm}
                   />
                 </div>
                 <div className="w-full md:w-1/2 px-3">
@@ -110,7 +146,8 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                     required
                     placeholder="Jane"
                     id="firstName"
-                    defaultValue={firstName}
+                    defaultValue={userData.firstName}
+                    onChange={onChangeForm}
                   />
                 </div>
               </div>
@@ -124,8 +161,9 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                     type="email"
                     placeholder="votre@email.com"
                     required
-                    id="email"
-                    defaultValue={email}
+                    id="mail"
+                    defaultValue={userData.mail}
+                    onChange={onChangeForm}
                   />
                 </div>
                 <div className="w-full px-3 mt-6">
@@ -136,8 +174,9 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
                     placeholder="Entrez l'address"
-                    id="address"
-                    defaultValue={address}
+                    id="adress"
+                    defaultValue={userData.adress}
+                    onChange={onChangeForm}
                   />
                 </div>
                 <div className="w-full px-3 mt-6">
@@ -147,8 +186,9 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                   <input
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
-                    id="zipCode"
-                    defaultValue={zipCode}
+                    id="zipcode"
+                    defaultValue={userData.zipCode}
+                    onChange={onChangeForm}
                     placeholder="Entrez le code postal"
                   />
                 </div>
@@ -161,19 +201,22 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                     type="text"
                     placeholder="Entrez le code postal"
                     id="city"
-                    defaultValue={city}
+                    defaultValue={userData.city}
+                    onChange={onChangeForm}
                   />
                 </div>
               </div>
 
               {/*<!--Submit button-->*/}
               <div className="my-4 mx-6 p-4 flex justify-center">
-                <button
-                  type="submit"
+                <div
                   className="w-[300px] bg-black hover:bg-white border border-black text-white hover:text-black font-bold py-2 px-4 rounded"
+                  onClick={() => {
+                    updateData(userData.id);
+                  }}
                 >
                   Enregistrer
-                </button>
+                </div>
               </div>
               {valide && (
                 <div className="h-[40px] flex items-center justify-center bg-green-500  bg-opacity-25 rounded mb-10">
