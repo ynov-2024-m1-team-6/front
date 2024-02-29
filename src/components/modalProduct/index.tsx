@@ -4,35 +4,83 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   productData: {
+    id?: number;
     username?: string;
     description?: string;
     price?: number;
     height?: number;
     weight?: number;
     ratio?: string;
+    thumbnail?: string;
+    active?: boolean;
   };
 }
 
-const ModalUser = ({ onClose, isOpen, productData }: Props) => {
+const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
   interface Props {
     isOpen: boolean;
     onClose: () => void;
     productData: {
+      id?: number;
       username?: string;
       description?: string;
       price?: number;
       height?: number;
       weight?: number;
       ratio?: string;
+      thumbnail?: string;
+      active?: boolean;
     };
   }
 
   const [valide, setValide] = useState(false);
-
+  const [error, setError] = useState(false);
   const closeModal = () => {
     onClose();
   };
 
+  const handleSaveClick = async () => {
+    if (productData.id === 0) {
+      const productDataWithoutId = { ...productData };
+      delete productDataWithoutId.id;
+      const res = await fetch(
+        `https://back-office-mkrp.onrender.com/products/create`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productDataWithoutId),
+        }
+      );
+      if (res.ok) {
+        closeModal();
+        setTimeout(() => {
+          setValide(false);
+        }, 3000);
+      } else setError(true);
+    } else {
+      const res = await fetch(
+        `https://back-office-mkrp.onrender.com/products/update?id=${productData.id}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(productData),
+        }
+      );
+      if (res.ok) {
+        closeModal();
+        setTimeout(() => {
+          setValide(false);
+        }, 3000);
+      }
+    }
+    setValide(true);
+  };
   if (!isOpen || !productData) return null;
 
   const {
@@ -42,6 +90,8 @@ const ModalUser = ({ onClose, isOpen, productData }: Props) => {
     height = "",
     weight = "",
     ratio = "",
+    thumbnail = "",
+    active = false,
   } = productData;
 
   return (
@@ -85,8 +135,8 @@ const ModalUser = ({ onClose, isOpen, productData }: Props) => {
         </div>
         <div className="flex flex-col items-center justify-start px-6 py-4 space-y-4 h-full">
           <div className="relative flex-auto p-4" data-te-modal-body-ref>
-            <form className="p-2 judtify-center" onSubmit={(e) => {}}>
-              <div className="flex flex-wrap -mx-3 mb-6">
+            <form className="p-2 judtify-center">
+              <div className="flex flex-wrap  -mx-3 mt-6">
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                   <label className="block uppercase text-gray-700 text-xs font-bold mb-2">
                     Username
@@ -94,30 +144,44 @@ const ModalUser = ({ onClose, isOpen, productData }: Props) => {
                   <input
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
-                    placeholder="mcGregor"
+                    placeholder="McGregor"
+                    required
                     id="username"
                     defaultValue={username}
-                    required
+                    onChange={(e) => (productData.username = e.target.value)}
                   />
                 </div>
-                <div className="w-full md:w-1/2 px-3">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                    Prenom
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label className="block uppercase text-gray-700 text-xs font-bold mb-2">
+                    Active
                   </label>
                   <input
-                    className="appearance-none block w-full border bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    type="text"
-                    required
-                    placeholder="Blablabla..."
-                    id="description"
-                    defaultValue={description}
+                    type="checkbox"
+                    id="checkbox"
+                    defaultChecked={active}
+                    onChange={(e) => (productData.active = e.target.checked)}
+                    className="relative peer shrink-0 appearance-none w-4 h-4 border-2 border-blue-500 rounded-sm bg-white mt-1 checked:bg-blue-800 checked:border-0"
                   />
                 </div>
               </div>
-              <div className="flex flex-wrap -mx-3 mb-6">
-                <div className="w-full px-3">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                    Email
+
+              <div className="w-full  mt-6">
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  Description
+                </label>
+                <input
+                  className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  type="text"
+                  placeholder="Blalabla..."
+                  id="description"
+                  onChange={(e) => (productData.description = e.target.value)}
+                  defaultValue={description}
+                />
+              </div>
+              <div className="flex flex-wrap -mx-3 mt-6">
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label className="block uppercase text-gray-700 text-xs font-bold mb-2">
+                    Price
                   </label>
                   <input
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -125,61 +189,83 @@ const ModalUser = ({ onClose, isOpen, productData }: Props) => {
                     placeholder="150$"
                     required
                     id="price"
+                    onChange={(e) => (productData.price = +e.target.value)}
                     defaultValue={price}
                   />
                 </div>
-                <div className="w-full px-3 mt-6">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                    Address
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label className="block uppercase text-gray-700 text-xs font-bold mb-2">
+                    Ratio
+                  </label>
+                  <input
+                    className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    type="text"
+                    placeholder="10-0"
+                    id="ratio"
+                    onChange={(e) => (productData.ratio = e.target.value)}
+                    defaultValue={ratio}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap -mx-3 mt-6">
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label className="block uppercase text-gray-700 text-xs font-bold mb-2">
+                    Height
                   </label>
                   <input
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="number"
                     placeholder="185cm"
                     id="height"
+                    onChange={(e) => (productData.height = +e.target.value)}
                     defaultValue={height}
                   />
                 </div>
-                <div className="w-full px-3 mt-6">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                    Code Postal
+                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                  <label className="block uppercase text-gray-700 text-xs font-bold mb-2">
+                    Weight
                   </label>
                   <input
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="number"
                     id="weight"
                     defaultValue={weight}
+                    onChange={(e) => (productData.weight = +e.target.value)}
                     placeholder="95kg"
                   />
                 </div>
-                <div className="w-full px-3 mt-6">
-                  <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
-                    Ville
-                  </label>
-                  <input
-                    className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    type="text"
-                    placeholder="2V/4D"
-                    id="ratio"
-                    defaultValue={ratio}
-                  />
-                </div>
+              </div>
+              <div className="w-full  mt-6">
+                <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                  Thumbnail
+                </label>
+                <input
+                  className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  type="text"
+                  placeholder="Url of the image"
+                  id="thumbnail"
+                  onChange={(e) => (productData.thumbnail = e.target.value)}
+                  defaultValue={thumbnail}
+                />
               </div>
 
               {/*<!--Submit button-->*/}
               <div className="my-4 mx-6 p-4 flex justify-center">
-                <button
-                  type="submit"
+                <div
+                  onClick={() => handleSaveClick()}
                   className="w-[300px] bg-black hover:bg-white border border-black text-white hover:text-black font-bold py-2 px-4 rounded"
                 >
                   Enregistrer
-                </button>
+                </div>
               </div>
               {valide && (
                 <div className="h-[40px] flex items-center justify-center bg-green-500  bg-opacity-25 rounded mb-10">
-                  <p className="text-center text-green-500">
-                    Modification Enregistrer
-                  </p>
+                  <p className="text-center text-green-500">Enregistrer</p>
+                </div>
+              )}
+              {error && (
+                <div className="h-[40px] flex items-center justify-center bg-red-500  bg-opacity-25 rounded mb-10">
+                  <p className="text-center text-red-500">Erreur</p>
                 </div>
               )}
             </form>
@@ -190,4 +276,4 @@ const ModalUser = ({ onClose, isOpen, productData }: Props) => {
   );
 };
 
-export default ModalUser;
+export default ModalProduct;

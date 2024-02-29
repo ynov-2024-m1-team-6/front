@@ -1,6 +1,6 @@
 "use client";
 
-import { React, useEffect, useState } from "react";
+import { React, use, useEffect, useState } from "react";
 import Card from "../../../components/card";
 import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalProduct";
@@ -34,13 +34,28 @@ const ProductsPage = () => {
         }
       );
       const productsData = await res.json();
-      console.log(productsData);
-      return setProductsData(productsData.data);
+      setProductsData(productsData.data);
     };
     getProducts();
   }, []);
 
   const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleAddProduct = () => {
+    const product = {
+      id: 0,
+      username: "",
+      description: "",
+      price: NaN,
+      height: NaN,
+      weight: NaN,
+      ratio: "",
+      thumbnail: "",
+      active: false,
+    };
     setSelectedProduct(product);
     setShowModal(true);
   };
@@ -55,8 +70,11 @@ const ProductsPage = () => {
         },
       }
     );
+    const data = await res.json();
+    setProductsData(
+      productsData.filter((products) => products.id !== product.id)
+    );
   };
-
   const filteredProducts =
     searchTerm.length === 0
       ? productsData
@@ -69,7 +87,17 @@ const ProductsPage = () => {
             product.thumbnail.toLowerCase().includes(searchTerm.toLowerCase())
         );
   return (
-    <div className="min-h-screen flex justify-center">
+    <div className="p-5">
+      <div className="mb-5 flex items-center gap-2">
+        <FiSearch className="text-gray-400" />
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          className="p-2 border border-gray-300 rounded-lg flex-1"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={() => handleAddProduct()}>New product</button>
+      </div>
       <div className="overflow-x-auto rounded-lg border border--2">
         <table className="w-full text-left rounded-lg overflow-hidden">
           <thead className="bg-black text-white">
@@ -81,6 +109,7 @@ const ProductsPage = () => {
               <th className="p-3">Weight</th>
               <th className="p-3">Ratio</th>
               <th className="p-3">Active</th>
+              <th className="p-3">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
@@ -123,12 +152,15 @@ const ProductsPage = () => {
           onClose={() => setShowModal(false)}
           productData={
             selectedProduct as {
+              id: number;
               username?: string;
               description?: string;
               price?: number;
               height?: number;
               weight?: number;
               ratio?: string;
+              thumbnail?: string;
+              active?: boolean;
             }
           }
         />
