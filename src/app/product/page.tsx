@@ -4,25 +4,33 @@ import Card from "@/components/card";
 import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
 import { Product } from "@/models/product";
+import ProductService from "@/services/productService";
+import WishlistService from "@/services/wishlistService";
 import { useEffect, useState } from "react";
 
 export default function Index() {
   const [products, setProducts] = useState<Product[]>();
+  const [wishlist, setWishlist] = useState<Product[]>();
 
   const getProducts = async () => {
-    const response = await fetch(
-      "https://back-office-mkrp.onrender.com/products/getProducts",
-      { method: "GET" }
-    );
-    if (!response.ok) {
-      return null;
+    const products = await ProductService.getProducts();
+    console.log(products);
+
+    if (products) {
+      setProducts(products);
     }
-    const responseJson = await response.json();
-    setProducts(responseJson.data);
+  };
+
+  const getWishlist = async () => {
+    const wishlist = await WishlistService.getWishlist();
+    if (wishlist) {
+      setWishlist(wishlist);
+    }
   };
 
   useEffect(() => {
     getProducts();
+    getWishlist();
   }, []);
 
   return (
@@ -35,7 +43,17 @@ export default function Index() {
         >
           {products &&
             products.map((prod, index) => {
-              return <Card key={index} product={prod} />;
+              return (
+                <Card
+                  key={index}
+                  product={prod}
+                  isInWishlist={
+                    wishlist?.some(
+                      (wishlistProduct) => wishlistProduct.id === prod.id
+                    ) ?? false
+                  }
+                />
+              );
             })}
         </section>
       </div>

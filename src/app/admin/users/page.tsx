@@ -20,6 +20,21 @@ const UsersPage = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [usersData, setUserData] = useState<User[]>([]);
 
+  const fetchDeleteUser = async (id: number) => {
+    const res = await fetch(
+      `https://back-office-mkrp.onrender.com/user/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    const data = await res.json();
+    console.log(data);
+    setUserData(usersData.filter((user) => user.id !== id));
+  };
+
   useEffect(() => {
     const getUser = async () => {
       const res = await fetch("https://back-office-mkrp.onrender.com/user", {
@@ -33,7 +48,7 @@ const UsersPage = () => {
       return setUserData(usersData.data);
     };
     getUser();
-  }, [usersData]);
+  }, []);
 
   const filteredUsers =
     searchTerm.length === 0
@@ -96,7 +111,10 @@ const UsersPage = () => {
                         <FiEdit2 />
                       </span>
                     </button>
-                    <button className="p-2 text-red-500 hover:text-red-700 hover:bg-gray-300 rounded-full relative">
+                    <button
+                      className="p-2 text-red-500 hover:text-red-700 hover:bg-gray-300 rounded-full relative"
+                      onClick={() => fetchDeleteUser(user.id)}
+                    >
                       <span className="flex items-center justify-center">
                         <FiTrash2 />
                       </span>
@@ -110,16 +128,7 @@ const UsersPage = () => {
         <Modal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          userData={
-            selectedUser as {
-              lastName?: string;
-              name?: string;
-              mail?: string;
-              adress?: string;
-              zipCode?: string;
-              city?: string;
-            }
-          }
+          userData={selectedUser as User}
         />
       </div>
     </div>
