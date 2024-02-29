@@ -12,28 +12,44 @@ export default function Index() {
   const [products, setProducts] = useState<Product[]>();
   const router = useRouter();
 
+  const [isConnected, setIsConnected] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
+
   const getProducts = async () => {
+    const token = UserService.getToken();
+
     const response = await fetch(
       "https://api-mystore.onrender.com/wishlist/getWishlist",
       {
         method: "GET",
-        headers: { Authorization: `Bearer` },
+        headers: { Authorization: `Bearer ${token}` },
       }
     );
     if (!response.ok) {
       return null;
     }
     const responseJson = await response.json();
-    setProducts(responseJson.data);
+
+    setProducts(responseJson);
   };
 
   useEffect(() => {
+    setIsConnected(!!UserService.currentUser());
+    setIsLoading(false);
+
     getProducts();
   }, []);
+
+  useEffect(() => {
+    if (!isLoading && !isConnected) {
+      router.push("/login");
+    }
+  }, [isConnected, router, isLoading]);
 
   return (
     <>
       <NavBar />
+      <h1 className="flex justify-center text-3xl mt-4">Wishlist</h1>
       <div className="min-h-screen flex justify-center">
         <section
           id="Projects"
@@ -41,7 +57,7 @@ export default function Index() {
         >
           {products &&
             products.map((prod, index) => {
-              return <Card key={index} product={prod} />;
+              return <Card key={index} product={prod} isWishlist={true} />;
             })}
         </section>
       </div>

@@ -3,6 +3,7 @@
 import { Product } from "@/models/product";
 import UserService from "@/services/userService";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { MdDelete } from "react-icons/md";
 
 interface Props {
@@ -11,7 +12,9 @@ interface Props {
 }
 
 const Card = ({ product, isWishlist }: Props) => {
-  const addToWishlist = () => {
+  const router = useRouter();
+
+  const addToWishlist = async () => {
     const token = UserService.getToken();
     const user = UserService.currentUser();
 
@@ -23,16 +26,24 @@ const Card = ({ product, isWishlist }: Props) => {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: product.id,
       }),
     };
 
-    fetch("https://api-mystore.onrender.com/wishlist/addItem", request);
+    const response = await fetch(
+      "https://api-mystore.onrender.com/wishlist/addItem",
+      request
+    );
+
+    if (response.ok) {
+      router.push("/wishlist");
+    }
   };
 
-  const removeFromWishlist = () => {
+  const removeFromWishlist = async () => {
     const token = UserService.getToken();
     const user = UserService.currentUser();
 
@@ -41,16 +52,23 @@ const Card = ({ product, isWishlist }: Props) => {
     }
 
     const request = {
-      method: "POST",
+      method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         id: product.id,
       }),
     };
 
-    fetch("https://api-mystore.onrender.com/wishlist/removeItem", request);
+    const response = await fetch(
+      "https://api-mystore.onrender.com/wishlist/removeItem",
+      request
+    );
+    if (response.ok) {
+      router.push("/product");
+    }
   };
 
   return (
