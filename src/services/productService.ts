@@ -10,7 +10,8 @@ const getProductById = async (
   if (!response.ok) {
     return null;
   }
-  return await response.json();
+  const responseJson = await response.json();
+  return responseJson.data;
 };
 
 const getProducts = async (): Promise<Product[] | null> => {
@@ -21,7 +22,8 @@ const getProducts = async (): Promise<Product[] | null> => {
   if (!response.ok) {
     return null;
   }
-  return await response.json();
+  const responseJson = await response.json();
+  return responseJson.data;
 };
 
 const ProductService = { getProductById, getProducts };

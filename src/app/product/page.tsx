@@ -14,6 +14,8 @@ export default function Index() {
 
   const getProducts = async () => {
     const products = await ProductService.getProducts();
+    console.log(products);
+
     if (products) {
       setProducts(products);
     }
