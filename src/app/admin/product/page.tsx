@@ -1,40 +1,172 @@
-import React from 'react'
-import Card from '../../../components/card'
+"use client";
 
-function page() {
-    const product = {
-        id: 1,
-        description:
-          "Daghestanais d'origine, je me suis entrainé avec Khabib Nurmagomedov.",
-        price: 299.99,
-        username: "EnormeZboubDu92",
-        height: 185,
-        weight: 105,
-        ratio: "10-0",
-        thumbnail:
-          "https://images.unsplash.com/photo-1491756975177-a13d74ed1e2f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fGZpZ2h0ZXJ8ZW58MHx8MHx8fDA%3D",
-      };
-      const products = [
-        product,
-        product,
-        product,
-        product,
-        product,
-        product,
-        product,
-      ];
-  return (
-    <div className="min-h-screen flex justify-center">
-    <section
-      id="Projects"
-      className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5"
-    >
-      {products.map((prod, index) => {
-        return <Card key={index} product={prod} />;
-      })}
-    </section>
-  </div>
-  )
+import { React, use, useEffect, useState } from "react";
+import Card from "../../../components/card";
+import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
+import Modal from "@/components/modalProduct";
+
+export interface Product {
+  id: number;
+  username: string;
+  description: string;
+  price: number;
+  height: number;
+  weight: number;
+  ratio: string;
+  thumbnail: string;
+  active: boolean;
 }
+const ProductsPage = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [productsData, setProductsData] = useState<Product[]>([]);
 
-export default page
+  useEffect(() => {
+    const getProducts = async () => {
+      const res = await fetch(
+        "https://back-office-mkrp.onrender.com/products/getProducts",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const productsData = await res.json();
+      setProductsData(productsData.data);
+    };
+    getProducts();
+  }, []);
+
+  const handleEditProduct = (product: Product) => {
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleAddProduct = () => {
+    const product = {
+      id: 0,
+      username: "",
+      description: "",
+      price: NaN,
+      height: NaN,
+      weight: NaN,
+      ratio: "",
+      thumbnail: "",
+      active: false,
+    };
+    setSelectedProduct(product);
+    setShowModal(true);
+  };
+
+  const handleDeleteProduct = async (product: Product) => {
+    const res = await fetch(
+      `https://back-office-mkrp.onrender.com/products/delete?id=${product.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    );
+    const data = await res.json();
+    setProductsData(
+      productsData.filter((products) => products.id !== product.id)
+    );
+  };
+  const filteredProducts =
+    searchTerm.length === 0
+      ? productsData
+      : productsData.filter(
+          (product) =>
+            product.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.description
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase()) ||
+            product.thumbnail.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+  return (
+    <div className="p-5">
+      <div className="mb-5 flex items-center gap-2">
+        <FiSearch className="text-gray-400" />
+        <input
+          type="text"
+          placeholder="Rechercher..."
+          className="p-2 border border-gray-300 rounded-lg flex-1"
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <button onClick={() => handleAddProduct()}>New product</button>
+      </div>
+      <div className="overflow-x-auto rounded-lg border border--2">
+        <table className="w-full text-left rounded-lg overflow-hidden">
+          <thead className="bg-black text-white">
+            <tr>
+              <th className="p-3">Username</th>
+              <th className="p-3">Description</th>
+              <th className="p-3">Price</th>
+              <th className="p-3">Height</th>
+              <th className="p-3">Weight</th>
+              <th className="p-3">Ratio</th>
+              <th className="p-3">Active</th>
+              <th className="p-3">Actions</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {filteredProducts.map((product) => (
+              <tr key={product.id} className="hover:bg-gray-100 group">
+                <td className="p-3 whitespace-nowrap">{product.username}</td>
+                <td className="p-3 whitespace-nowrap">{product.description}</td>
+                <td className="p-3 whitespace-nowrap">{product.price}</td>
+                <td className="p-3 whitespace-nowrap">{product.height}</td>
+                <td className="p-3 whitespace-nowrap">{product.weight}</td>
+                <td className="p-3 whitespace-nowrap">{product.ratio}</td>
+                <td className="p-3 whitespace-nowrap">
+                  {product.active ? "true" : "false"}
+                </td>
+                <td className="p-3">
+                  <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <button
+                      className="p-2 text-blue-500 hover:text-blue-700 hover:bg-gray-300 rounded-full relative"
+                      onClick={() => handleEditProduct(product)}
+                    >
+                      <span className="flex items-center justify-center">
+                        <FiEdit2 />
+                      </span>
+                    </button>
+                    <button className="p-2 text-red-500 hover:text-red-700 hover:bg-gray-300 rounded-full relative">
+                      <span className="flex items-center justify-center">
+                        <FiTrash2
+                          onClick={() => handleDeleteProduct(product)}
+                        />
+                      </span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <Modal
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          productData={
+            selectedProduct as {
+              id: number;
+              username?: string;
+              description?: string;
+              price?: number;
+              height?: number;
+              weight?: number;
+              ratio?: string;
+              thumbnail?: string;
+              active?: boolean;
+            }
+          }
+        />
+      </div>
+    </div>
+  );
+};
+
+export default ProductsPage;

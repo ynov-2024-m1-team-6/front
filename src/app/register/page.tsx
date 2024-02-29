@@ -29,6 +29,7 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
+    setIsLoading(true);
     if (!isLoading && isConnected) {
       router.push("/");
     }
@@ -61,6 +62,7 @@ export default function Index() {
 
       if (err) {
         setError(err);
+        setIsLoading(false);
       } else {
         router.push("/");
       }
@@ -89,7 +91,7 @@ export default function Index() {
             name="phoneNumber"
             onChange={setPhoneNumber}
           />
-          <Button title="S'inscrire" onClick={onSubmit} />
+          <Button title="S'inscrire" onClick={onSubmit} disabled={isLoading} />
         </form>
         {error && <p className="text-red-600">{error}</p>}
         <p className="mt-5 text-center text-sm text-gray-500">

@@ -1,15 +1,21 @@
 "use client";
 
+import { User } from "@/models/user";
 import UserService from "@/services/userService";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import Modal from "@/components/modalNavbar";
 
 function NavBar() {
-  const user = UserService.currentUser();
   const admin = UserService.isAdmin();
+  const [user, setUser] = useState<User | null>();
   const router = useRouter();
+
+  useEffect(() => {
+    setUser(UserService.currentUser());
+  }, []);
 
   const logout = () => {
     UserService.logout();

@@ -12,7 +12,6 @@ const login = async (
       mail: mail,
       password: password,
     });
-    console.log(body);
 
     const response = await fetch(
       "https://api-mystore.onrender.com/auth/login",
@@ -68,7 +67,6 @@ const register = async (
     );
 
     const responseJson = await response.json();
-    console.log(responseJson);
     if (!response.ok) {
       return responseJson.message;
     }
