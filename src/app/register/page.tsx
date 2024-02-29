@@ -94,7 +94,7 @@ export default function Index() {
         {error && <p className="text-red-600">{error}</p>}
         <p className="mt-5 text-center text-sm text-gray-500">
           <a
-            href="/"
+            href="/login"
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
           >
             Se connecter
