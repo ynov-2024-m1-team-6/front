@@ -70,12 +70,12 @@ function NavBar() {
         ) : (
           <div className="flex gap-2">
           <a href="/login">
-            <div className="h-[50px] min-w-28 px-8 flex rounded-xl items-center text-white bg-violet-600 "> 
+            <div className="h-[50px] min-w-16 px-4 flex rounded-xl items-center text-white black-600 bg-slate-950"> 
               <p>Login</p>
             </div>
           </a>
           <a href="/register">
-            <div className="h-[50px] min-w-28 px-8 flex rounded-xl items-center  text-white bg-violet-600 ">
+            <div className="h-[50px] min-w-16 px-4 flex rounded-xl items-center  text-white bg-slate-950">
               <p>Register</p>
             </div>
           </a>

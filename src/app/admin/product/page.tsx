@@ -1,6 +1,6 @@
 "use client";
 
-import { React, use, useEffect, useState } from "react";
+import React, {useEffect, useState } from "react";
 import Card from "../../../components/card";
 import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalProduct";
