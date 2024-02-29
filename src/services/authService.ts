@@ -48,10 +48,12 @@ const register = async (
         }),
       }
     );
+
     const responseJson = await response.json();
     if (!response.ok) {
       return responseJson.message;
     }
+    console.log(responseJson);
     localStorage.setItem("token", responseJson.data);
     return null;
   } catch (error) {

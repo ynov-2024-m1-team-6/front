@@ -18,8 +18,6 @@ export default function Index() {
       return null;
     }
     const responseJson = await response.json();
-    console.log(responseJson);
-
     setProducts(responseJson.data);
   };
 
