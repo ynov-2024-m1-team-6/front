@@ -8,16 +8,23 @@ const login = async (
   password: string
 ): Promise<string | null> => {
   try {
-    const payload: Log = { mail, password };
-    console.log(payload);
+    const body = JSON.stringify({
+      mail: mail,
+      password: password,
+    });
+    console.log(body);
 
     const response = await fetch(
       "https://api-mystore.onrender.com/auth/login",
       {
         method: "POST",
-        body: JSON.stringify(payload),
+        body: body,
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
+
     const responseJson = await response.json();
     if (!response.ok) {
       return responseJson.message;
@@ -54,6 +61,9 @@ const register = async (
           zipCode,
           phoneNumber,
         }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
     );
 
