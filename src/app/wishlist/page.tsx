@@ -17,9 +17,14 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   const getWishlist = async () => {
-    const wishlist = await WishlistService.getWishlist();
-    if (wishlist) {
-      setWishlist(wishlist);
+    try {
+      const wishlist = await WishlistService.getWishlist();
+      if (wishlist) {
+        setWishlist(wishlist);
+      }
+    }
+    catch (error) {
+      setWishlist([]);
     }
   };
 

@@ -14,7 +14,15 @@ function NavBar() {
   const router = useRouter();
 
   useEffect(() => {
-    setUser(UserService.currentUser());
+    try
+    {
+      const user = UserService.currentUser();
+      setUser(user);
+    }
+    catch (error)
+    {
+      setUser(null);
+    }
   }, []);
 
   const logout = () => {
