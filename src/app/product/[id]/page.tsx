@@ -12,8 +12,6 @@ export default function Index() {
   const params = useParams();
 
   const getProducts = async () => {
-    console.log(params);
-
     const response = await fetch(
       `https://back-office-mkrp.onrender.com/products/getProduct?id=${params.id}`,
       { method: "GET" }

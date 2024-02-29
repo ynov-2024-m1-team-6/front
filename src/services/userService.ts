@@ -10,7 +10,8 @@ const currentUser = (): User | null => {
 };
 
 const isAdmin = (): boolean => {
-  if (currentUser()?.isAdmin) {
+  const user = currentUser();
+  if (user?.isAdmin) {
     return true;
   }
   return false;
