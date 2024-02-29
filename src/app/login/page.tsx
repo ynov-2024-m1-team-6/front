@@ -3,15 +3,30 @@
 import Button from "@/components/button";
 import Input from "@/components/input";
 import AuthService from "@/services/authService";
+import UserService from "@/services/userService";
 import connectionValidators from "@/services/validators/connectionValidator";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Index() {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string | null>();
   const router = useRouter();
+
+  const [isConnected, setIsConnected] = useState<Boolean>(false);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
+
+  useEffect(() => {
+    setIsConnected(!!UserService.currentUser());
+    setIsLoading(false);
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading && isConnected) {
+      router.push("/");
+    }
+  }, [isConnected, router, isLoading]);
 
   const onSubmit = async () => {
     const error = connectionValidators.isLoginFormValid({
@@ -36,7 +51,7 @@ export default function Index() {
     }
   };
 
-  return (
+  return !isConnected && !isLoading ? (
     <div className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8">
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6" action="#" method="POST">
@@ -64,5 +79,7 @@ export default function Index() {
         </p>
       </div>
     </div>
+  ) : (
+    <></>
   );
 }

@@ -9,5 +9,13 @@ const currentUser = (): User | null => {
   return jwtDecode<User>(token);
 };
 
-const UserService = { currentUser };
+const isAdmin = (): boolean => {
+  const user = currentUser();
+  if (user?.isAdmin) {
+    return true;
+  }
+  return false;
+};
+
+const UserService = { currentUser, isAdmin };
 export default UserService;
