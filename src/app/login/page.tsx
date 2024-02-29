@@ -2,26 +2,38 @@
 
 import Button from "@/components/button";
 import Input from "@/components/input";
+import AuthService from "@/services/authService";
 import connectionValidators from "@/services/validators/connectionValidator";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Index() {
   const [email, setEmail] = useState<string>();
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string | null>();
+  const router = useRouter();
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     const error = connectionValidators.isLoginFormValid({
       email,
       password,
     });
 
-    if (!error) {
-      console.log("call to api with params:");
-      console.log(`email: ${email}`);
-      console.log(`password: ${password}`);
+    if (error) {
+      setError(error);
+      return;
     }
-    setError(error);
+
+    try {
+      const err = await AuthService.login(email!, password!);
+      if (err) {
+        setError(err);
+      } else {
+        router.push("/");
+      }
+    } catch {
+      setError("Une erreur s'est produite");
+    }
   };
 
   return (
