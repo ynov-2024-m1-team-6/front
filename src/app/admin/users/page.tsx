@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { FiEdit2, FiTrash2, FiSearch } from 'react-icons/fi';
+import Modal from '@/components/modalUser';
 
 const usersData = [
     { id: 1, firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', address: '123 Main St', zipCode: '12345', city: 'Anytown' },
@@ -38,7 +39,9 @@ const usersData = [
   
 const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
-
+  const [showModal, setShowModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState("");
+  
 
   const filteredUsers = searchTerm.length === 0 ? usersData : usersData.filter(user =>
     user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,6 +51,11 @@ const UsersPage = () => {
     user.zipCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.city.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleEditUser = (user) => {
+    setSelectedUser(user);
+    setShowModal(true);
+  };
 
 
   return (
@@ -85,7 +93,9 @@ const UsersPage = () => {
                 <td className="p-3 whitespace-nowrap">{user.city}</td>
                 <td className="p-3">
                   <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <button className="p-2 text-blue-500 hover:text-blue-700 hover:bg-gray-300 rounded-full relative">
+                  <button 
+                      className="p-2 text-blue-500 hover:text-blue-700 hover:bg-gray-300 rounded-full relative" 
+                      onClick={() => handleEditUser(user)}>
                     <span className="flex items-center justify-center">
                      <FiEdit2 />
                      </span>
@@ -101,6 +111,10 @@ const UsersPage = () => {
             ))}
           </tbody>
         </table>
+        <Modal 
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        userData={selectedUser as { lastName?: string, firstName?: string, email?: string, address?: string, zipCode?: string, city?: string }} />
       </div> 
     </div>
   );
