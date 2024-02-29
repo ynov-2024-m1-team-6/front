@@ -29,6 +29,7 @@ export default function Index() {
   }, [isConnected, router, isLoading]);
 
   const onSubmit = async () => {
+    setIsLoading(true);
     const error = connectionValidators.isLoginFormValid({
       email,
       password,
@@ -48,6 +49,7 @@ export default function Index() {
       }
     } catch {
       setError("Une erreur s'est produite");
+      setIsLoading(false);
     }
   };
 
@@ -66,7 +68,11 @@ export default function Index() {
             onChange={setPassword}
           />
 
-          <Button title="Se connecter" onClick={onSubmit} />
+          <Button
+            title="Se connecter"
+            onClick={onSubmit}
+            disabled={isLoading}
+          />
         </form>
         {error && <p className="text-red-600">{error}</p>}
         <p className="mt-5 text-center text-sm text-gray-500">
