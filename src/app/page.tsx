@@ -22,7 +22,7 @@ export default function Home() {
         </div>
         <div className="flex flex-col items-center justify-center w-full">
          <Image className="flex-col rounded-md" src={HomePic} alt="home" width={1100} height={300} />
-         <a href="/products" className="mt-10">
+         <a href="/product" className="mt-10">
             <div className="h-[50px] min-w-52 px-8 flex rounded-xl items-center text-white bg-black "> 
               <p>Decouvrez nos Combatants</p>
             </div>
@@ -71,10 +71,7 @@ export default function Home() {
                     <p>Fighter 1</p>
                 </div>
         </div>
-
-
         </div>
-        
       </div>
       <Footer />
     </main>
