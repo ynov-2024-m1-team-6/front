@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Card from "@/components/card";
 import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
@@ -10,35 +10,24 @@ import { useEffect, useState } from "react";
 export default function Index() {
   const [products, setProducts] = useState<Product[]>();
   const [wishlist, setWishlist] = useState<Product[]>();
-  const [isTokenPresent, setIsTokenPresent] = useState<boolean>(false);
-  const [error, setError] = useState("");
-   
+
   const getProducts = async () => {
-    try {
-      const products = await ProductService.getProducts();
-      if (products) {
-        setProducts(products);
-        setError(""); // Réinitialiser l'erreur si la requête est réussie
-      }
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-      setError("Failed to load products. Please try again later."); // Définir un message d'erreur
-      setProducts([]);
+    const products = await ProductService.getProducts();
+    if (products) {
+      setProducts(products);
     }
   };
-  useEffect(() => {
-    try {
-      const token = localStorage.get("token")  
-      setIsTokenPresent(!!token); 
-      getProducts();
-    } catch (error) {
-      console.error("Failed to fetch token:", error);
+
+  const getWishlist = async () => {
+    const wishlist = await WishlistService.getWishlist();
+    if (wishlist) {
+      setWishlist(wishlist);
     }
+  };
 
-  
-
-    
-
+  useEffect(() => {
+    getProducts();
+    getWishlist();
   }, []);
 
   return (
@@ -55,7 +44,11 @@ export default function Index() {
                 <Card
                   key={index}
                   product={prod}
-                  isInWishlist={false}
+                  isInWishlist={
+                    wishlist?.some(
+                      (wishlistProduct) => wishlistProduct.id === prod.id
+                    ) ?? false
+                  }
                 />
               );
             })}
