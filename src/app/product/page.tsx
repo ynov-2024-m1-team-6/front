@@ -1,5 +1,4 @@
 "use client";
-
 import Card from "@/components/card";
 import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
@@ -14,7 +13,6 @@ export default function Index() {
 
   const getProducts = async () => {
     const products = await ProductService.getProducts();
-
     if (products) {
       setProducts(products);
     }

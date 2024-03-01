@@ -67,7 +67,6 @@ const register = async (
     );
 
     const responseJson = await response.json();
-    console.log(responseJson);
     if (!response.ok) {
       return responseJson.message;
     }
