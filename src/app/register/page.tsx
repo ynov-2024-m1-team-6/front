@@ -29,7 +29,6 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
     if (!isLoading && isConnected) {
       router.push("/");
     }
