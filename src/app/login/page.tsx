@@ -5,7 +5,7 @@ import Input from "@/components/input";
 import AuthService from "@/services/authService";
 import UserService from "@/services/userService";
 import connectionValidators from "@/services/validators/connectionValidator";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Index() {
@@ -13,6 +13,7 @@ export default function Index() {
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<string | null>();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [isConnected, setIsConnected] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -41,11 +42,16 @@ export default function Index() {
     }
 
     try {
+      const next = searchParams.get("next");
       const err = await AuthService.login(email!, password!);
       if (err) {
         setError(err);
       } else {
-        router.push("/");
+        if (next) {
+          router.push(`/${next}`);
+        } else {
+          router.push("/");
+        }
       }
     } catch {
       setError("Une erreur s'est produite");

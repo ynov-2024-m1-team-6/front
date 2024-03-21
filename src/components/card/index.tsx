@@ -80,8 +80,6 @@ const Card = ({ product, isInWishlist }: Props) => {
     }
   };
 
-  console.log(cart);
-
   return (
     <div className="relative w-72 bg-white shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl">
       <div>
@@ -108,7 +106,10 @@ const Card = ({ product, isInWishlist }: Props) => {
             </p>
             {cart.some((productId: number) => productId == product.id) ? (
               <div
-                onClick={() => dispatch(removeFromCart(product.id!))}
+                onClick={() => {
+                  dispatch(removeFromCart(product.id!));
+                  router.push("/cart");
+                }}
                 className="ml-auto cursor-pointer"
               >
                 <MdOutlineRemoveShoppingCart />

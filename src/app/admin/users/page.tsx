@@ -3,16 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalUser";
 import UserService from "@/services/userService";
-
-export interface User {
-  id: number;
-  firstName: string;
-  name: string;
-  mail: string;
-  adress: string;
-  zipCode: string;
-  city: string;
-}
+import { User } from "@/models/user";
 
 const UsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +22,6 @@ const UsersPage = () => {
       }
     );
     const data = await res.json();
-    console.log(data);
     setUserData(usersData.filter((user) => user.id !== id));
   };
 
@@ -47,7 +37,6 @@ const UsersPage = () => {
         }
       );
       const usersData = await res.json();
-      console.log(usersData);
       return setUserData(usersData.data);
     };
     getUser();
@@ -131,7 +120,7 @@ const UsersPage = () => {
         <Modal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          userData={selectedUser as User}
+          userData={selectedUser!}
         />
       </div>
     </div>

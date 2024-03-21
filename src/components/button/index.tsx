@@ -9,7 +9,12 @@ interface Props {
   disabled: boolean;
 }
 
-const Button = ({ title, type = "button", onClick, disabled }: Props) => {
+const Button = ({
+  title,
+  type = "button",
+  onClick,
+  disabled = false,
+}: Props) => {
   return (
     <button
       type={type}

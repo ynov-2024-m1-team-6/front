@@ -57,14 +57,14 @@ function NavBar() {
                 height={24}
               />
             </a>
-            <div className="relative flex items-center">
+            <a href="/cart" className="relative flex items-center">
               <Image src="/bag.svg" alt="Icon 2" width={24} height={24} />
               {cart.length > 0 && (
                 <div className="absolute h-4 w-4 bg-red-500 rounded-full bottom-2 -right-1 flex items-center justify-center">
                   <p className="text-xs text-white">{cart.length}</p>
                 </div>
               )}
-            </div>
+            </a>
             {admin ? (
               <div className="h-[50px] w-[50px] flex bg-slate-300 p-3 rounded-full">
                 <a href="/admin">
