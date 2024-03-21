@@ -1,36 +1,18 @@
+import { Product } from "@/models/product";
+import UserService from "@/services/userService";
 import React, { useState } from "react";
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  productData: {
-    id?: number;
-    username?: string;
-    description?: string;
-    price?: number;
-    height?: number;
-    weight?: number;
-    ratio?: string;
-    thumbnail?: string;
-    active?: boolean;
-  };
+  productData: Product;
 }
 
 const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
   interface Props {
     isOpen: boolean;
     onClose: () => void;
-    productData: {
-      id?: number;
-      username?: string;
-      description?: string;
-      price?: number;
-      height?: number;
-      weight?: number;
-      ratio?: string;
-      thumbnail?: string;
-      active?: boolean;
-    };
+    productData: Product;
   }
 
   const [valide, setValide] = useState(false);
@@ -42,13 +24,15 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
   const handleSaveClick = async () => {
     if (productData.id === 0) {
       const productDataWithoutId = { ...productData };
-      delete productDataWithoutId.id;
+      if (productDataWithoutId.id) {
+        delete productDataWithoutId.id;
+      }
       const res = await fetch(
-        `https://back-office-mkrp.onrender.com/products/create`,
+        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/create`,
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${UserService.getToken()}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(productDataWithoutId),
@@ -62,11 +46,11 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
       } else setError(true);
     } else {
       const res = await fetch(
-        `https://back-office-mkrp.onrender.com/products/update?id=${productData.id}`,
+        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/update?id=${productData.id}`,
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${UserService.getToken()}`,
             "Content-Type": "application/json",
           },
           body: JSON.stringify(productData),

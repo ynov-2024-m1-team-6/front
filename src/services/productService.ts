@@ -4,7 +4,7 @@ const getProductById = async (
   id: string | string[]
 ): Promise<Product | null> => {
   const response = await fetch(
-    `https://back-office-mkrp.onrender.com/products/getProduct?id=${id}`,
+    `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getProduct?id=${id}`,
     { method: "GET" }
   );
   if (!response.ok) {
@@ -23,9 +23,12 @@ const getProductById = async (
 };
 
 const getProducts = async (): Promise<Product[] | null> => {
+  console.log(process.env.NEXT_PUBLIC_BACK_OFFICE_URL);
   const response = await fetch(
-    "https://back-office-mkrp.onrender.com/products/getProducts",
-    { method: "GET" }
+    `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getProducts`,
+    {
+      method: "GET",
+    }
   );
   if (!response.ok) {
     return null;

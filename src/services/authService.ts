@@ -14,7 +14,7 @@ const login = async (
     });
 
     const response = await fetch(
-      "https://api-mystore.onrender.com/auth/login",
+      `${process.env.NEXT_PUBLIC_API_URL}auth/login`,
       {
         method: "POST",
         body: body,
@@ -47,7 +47,7 @@ const register = async (
 ): Promise<string | null> => {
   try {
     const response = await fetch(
-      "https://api-mystore.onrender.com/auth/register",
+      `${process.env.NEXT_PUBLIC_API_URL}auth/register`,
       {
         method: "POST",
         body: JSON.stringify({
