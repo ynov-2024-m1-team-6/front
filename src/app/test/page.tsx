@@ -19,14 +19,12 @@ export default function PanierComponent() {
         onChange={(e) => setItem(e.target.value)}
         placeholder="Ajoute un article"
       />
-      <button onClick={() => dispatch(addToCart(item))}>Ajouter</button>
+      <button onClick={() => dispatch(addToCart(1))}>Ajouter</button>
       <ul>
         {panier.map((article: string, index: number) => (
           <li key={index}>
             {article}{" "}
-            <button onClick={() => dispatch(removeFromCart(article))}>
-              Retirer
-            </button>
+            <button onClick={() => dispatch(removeFromCart(1))}>Retirer</button>
           </li>
         ))}
       </ul>

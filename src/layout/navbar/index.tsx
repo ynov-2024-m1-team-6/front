@@ -7,20 +7,19 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IoIosLogOut } from "react-icons/io";
 import Modal from "@/components/modalNavbar";
+import { useAppSelector } from "@/redux/hooks";
 
 function NavBar() {
   const admin = UserService.isAdmin();
   const [user, setUser] = useState<User | null>();
   const router = useRouter();
+  const cart = useAppSelector((state: any) => state.panier.items);
 
   useEffect(() => {
-    try
-    {
+    try {
       const user = UserService.currentUser();
       setUser(user);
-    }
-    catch (error)
-    {
+    } catch (error) {
       setUser(null);
     }
   }, []);
@@ -46,7 +45,7 @@ function NavBar() {
             <p className="text-[#0D0D0D]">Search</p>
           </button>
         </div>
-        
+
         {user ? (
           <div className="flex gap-8">
             <a href="/wishlist" className="flex items-center">
@@ -58,37 +57,44 @@ function NavBar() {
                 height={24}
               />
             </a>
-            <Image src="/bag.svg" alt="Icon 2" width={24} height={24} />
+            <a href="/cart" className="relative flex items-center">
+              <Image src="/bag.svg" alt="Icon 2" width={24} height={24} />
+              {cart.length > 0 && (
+                <div className="absolute h-4 w-4 bg-red-500 rounded-full bottom-2 -right-1 flex items-center justify-center">
+                  <p className="text-xs text-white">{cart.length}</p>
+                </div>
+              )}
+            </a>
             {admin ? (
-            <div className="h-[50px] w-[50px] flex bg-slate-300 p-3 rounded-full">
-              <a href="/admin">
-              <Image src="/user.svg" alt="Icon 1" width={24} height={24} />
-              </a>
-            </div>
-            ):null}
+              <div className="h-[50px] w-[50px] flex bg-slate-300 p-3 rounded-full">
+                <a href="/admin">
+                  <Image src="/user.svg" alt="Icon 1" width={24} height={24} />
+                </a>
+              </div>
+            ) : null}
             <div className="h-[50px] w-[50px] flex bg-red-500 p-3 rounded-full">
-            <IoIosLogOut
-              className="flex items-center cursor-pointer"
-              onClick={() => logout()}
-              width={24}
-              height={24}
-            />
+              <IoIosLogOut
+                className="flex items-center cursor-pointer"
+                onClick={() => logout()}
+                width={24}
+                height={24}
+              />
             </div>
           </div>
         ) : (
           <div className="flex gap-2">
-          <a href="/login">
-            <div className="h-[50px] min-w-16 px-4 flex rounded-xl items-center text-white black-600 bg-slate-950"> 
-              <p>Login</p>
-            </div>
-          </a>
-          <a href="/register">
-            <div className="h-[50px] min-w-16 px-4 flex rounded-xl items-center  text-white bg-slate-950">
-              <p>Register</p>
-            </div>
-          </a>
-        </div>
-        ) }
+            <a href="/login">
+              <div className="h-[50px] min-w-16 px-4 flex rounded-xl items-center text-white black-600 bg-slate-950">
+                <p>Login</p>
+              </div>
+            </a>
+            <a href="/register">
+              <div className="h-[50px] min-w-16 px-4 flex rounded-xl items-center  text-white bg-slate-950">
+                <p>Register</p>
+              </div>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
