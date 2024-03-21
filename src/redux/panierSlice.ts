@@ -1,0 +1,27 @@
+"use client";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface PanierState {
+  items: string[];
+}
+
+const initialState: PanierState = {
+  items: [],
+};
+
+export const panierSlice = createSlice({
+  name: "panier",
+  initialState,
+  reducers: {
+    addToCart: (state, action: PayloadAction<string>) => {
+      state.items.push(action.payload);
+    },
+    removeFromCart: (state, action: PayloadAction<string>) => {
+      state.items = state.items.filter((item) => item !== action.payload);
+    },
+  },
+});
+
+export const { addToCart, removeFromCart } = panierSlice.actions;
+
+export default panierSlice.reducer;
