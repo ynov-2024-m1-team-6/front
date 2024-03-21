@@ -13,11 +13,13 @@ export const panierSlice = createSlice({
   name: "panier",
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<string>) => {
-      state.items.push(action.payload);
+    addToCart: (state, action: PayloadAction<number>) => {
+      state.items.push(action.payload.toString());
     },
-    removeFromCart: (state, action: PayloadAction<string>) => {
-      state.items = state.items.filter((item) => item !== action.payload);
+    removeFromCart: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter(
+        (item) => item !== action.payload.toString()
+      );
     },
   },
 });
