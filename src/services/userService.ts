@@ -42,5 +42,25 @@ const logout = () => {
   localStorage.removeItem("token");
 };
 
-const UserService = { currentUser, isAdmin, getToken, logout };
+const getMe = async (): Promise<User | null> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}user`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${UserService.getToken()}`,
+      },
+    });
+
+    const responseJson = await response.json();
+    if (!response.ok) {
+      return responseJson.message;
+    }
+    return responseJson.data as User;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const UserService = { currentUser, isAdmin, getToken, logout, getMe };
 export default UserService;

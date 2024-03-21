@@ -6,6 +6,7 @@ import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
 import { User } from "@/models/user";
 import UserService from "@/services/userService";
+import AddressValidator from "@/services/validators/addressValidator";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -19,18 +20,46 @@ export default function Index() {
   const [address, setAddress] = useState<string>();
   const [city, setCity] = useState<string>();
   const [zipCode, setZipCode] = useState<string>();
+  const [error, setError] = useState<string | null>();
 
-  useEffect(() => {
-    const user = UserService.currentUser();
+  const getUser = async () => {
+    const user = await UserService.getMe();
     if (!user) {
       router.push("login?next=command");
     }
+
     setUser(user);
-  }, [router]);
+    setAddress(user?.adress);
+    setAddress(user?.city);
+    setAddress(user?.zipCode);
+  };
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   useEffect(() => {
     console.log(user);
   }, [user]);
+
+  useEffect(() => {
+    if (!isModifyingUserAddress && shippingHome) {
+      setError(
+        AddressValidator.isValidAdress(user?.adress, user?.city, user?.city)
+      );
+    } else {
+      setError(AddressValidator.isValidAdress(address, city, zipCode));
+    }
+  }, [
+    address,
+    city,
+    zipCode,
+    shippingHome,
+    isModifyingUserAddress,
+    user?.adress,
+    user?.city,
+    user?.zipCode,
+  ]);
 
   return (
     <>
@@ -61,7 +90,11 @@ export default function Index() {
                   {shippingHome && (
                     <div>
                       <div className="flex gap-2 items-end">
-                        <p>12 rue anatole France</p>
+                        {!isModifyingUserAddress && (
+                          <p>
+                            {user?.adress}, {user?.city}, {user?.zipCode}
+                          </p>
+                        )}
                         <p
                           className="text-sm text-blue-500 underline cursor-pointer"
                           onClick={() =>
@@ -117,12 +150,13 @@ export default function Index() {
                   )}
                 </ul>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-between">
+                <p className="text-red-500">{error}</p>
                 <div className="w-fit">
                   <Button
                     title="Confimer"
                     onClick={() => setStep(1)}
-                    disabled={false}
+                    disabled={error ? true : false}
                   />
                 </div>
               </div>
