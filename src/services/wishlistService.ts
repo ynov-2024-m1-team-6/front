@@ -7,7 +7,7 @@ const getWishlist = async (): Promise<Product[] | null> => {
   const token = UserService.getToken();
 
   const response = await fetch(
-    "https://api-mystore.onrender.com/wishlist/getWishlist",
+    `${process.env.NEXT_PUBLIC_API_URL}wishlist/getWishlist`,
     {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },

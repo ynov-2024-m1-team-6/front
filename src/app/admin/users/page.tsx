@@ -1,8 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalUser";
+import UserService from "@/services/userService";
 
 export interface User {
   id: number;
@@ -22,11 +22,11 @@ const UsersPage = () => {
 
   const fetchDeleteUser = async (id: number) => {
     const res = await fetch(
-      `https://back-office-mkrp.onrender.com/user/${id}`,
+      `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}user/${id}`,
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${UserService.getToken()}`,
         },
       }
     );
@@ -37,12 +37,15 @@ const UsersPage = () => {
 
   useEffect(() => {
     const getUser = async () => {
-      const res = await fetch("https://back-office-mkrp.onrender.com/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}user`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${UserService.getToken()}`,
+          },
+        }
+      );
       const usersData = await res.json();
       console.log(usersData);
       return setUserData(usersData.data);

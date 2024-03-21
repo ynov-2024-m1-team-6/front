@@ -1,12 +1,12 @@
 export type User = {
-  id: string;
+  id: number;
   name: string;
-  firstname: string;
+  firstName: string;
   mail: string;
-  password: string;
-  address: string;
+  password: string | null;
+  adress: string;
   zipCode: string;
   city: string;
   phoneNumber: string;
-  isAdmin: string;
+  isAdmin: boolean;
 };

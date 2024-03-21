@@ -1,21 +1,12 @@
 "use client";
 
-import React, {useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "../../../components/card";
 import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalProduct";
+import UserService from "@/services/userService";
+import { Product } from "@/models/product";
 
-export interface Product {
-  id: number;
-  username: string;
-  description: string;
-  price: number;
-  height: number;
-  weight: number;
-  ratio: string;
-  thumbnail: string;
-  active: boolean;
-}
 const ProductsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -25,11 +16,11 @@ const ProductsPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       const res = await fetch(
-        "https://back-office-mkrp.onrender.com/products/getProducts",
+        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getProducts`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${UserService.getToken()}`,
           },
         }
       );
@@ -62,11 +53,11 @@ const ProductsPage = () => {
 
   const handleDeleteProduct = async (product: Product) => {
     const res = await fetch(
-      `https://back-office-mkrp.onrender.com/products/delete?id=${product.id}`,
+      `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/delete?id=${product.id}`,
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${UserService.getToken()}`,
         },
       }
     );
@@ -150,19 +141,7 @@ const ProductsPage = () => {
         <Modal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          productData={
-            selectedProduct as {
-              id: number;
-              username?: string;
-              description?: string;
-              price?: number;
-              height?: number;
-              weight?: number;
-              ratio?: string;
-              thumbnail?: string;
-              active?: boolean;
-            }
-          }
+          productData={selectedProduct as Product}
         />
       </div>
     </div>

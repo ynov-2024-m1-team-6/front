@@ -1,33 +1,13 @@
+import { User } from "@/models/user";
 import React, { useEffect, useState } from "react";
-
-export interface User {
-  id: number;
-  firstName: string;
-  name: string;
-  mail: string;
-  adress: string;
-  zipCode: string;
-  city: string;
-  phoneNumber: string;
-}
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  userData: {
-    id: number;
-    firstName?: string;
-    name?: string;
-    mail?: string;
-    adress?: string;
-    zipCode?: string;
-    phoneNumber?: string;
-    city?: string;
-  };
+  userData: User;
 }
 
 const ModalUser = ({ onClose, isOpen, userData }: Props) => {
-  console.log(userData);
   const [formData, setFormData] = useState<User>({
     id: 0,
     firstName: "",
@@ -37,16 +17,17 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
     zipCode: "",
     phoneNumber: "",
     city: "",
+    password: null,
+    isAdmin: false,
   });
 
   useEffect(() => {
     setFormData(userData as User);
-  }, []);
+  }, [userData]);
 
   const updateData = async (id: number) => {
-    console.log("updateData");
     const res = await fetch(
-      `https://back-office-mkrp.onrender.com/user/${id}`,
+      `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}user/${id}`,
       {
         method: "PUT",
         headers: {
@@ -56,21 +37,19 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
         body: JSON.stringify(formData),
       }
     );
-    setValide(true);
+    setValid(true);
     if (res.ok) {
       closeModal();
       setTimeout(() => {
-        setValide(false);
+        setValid(false);
       }, 3000);
     }
   };
 
-  const [valide, setValide] = useState(false);
+  const [valid, setValid] = useState(false);
 
   const onChangeForm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setFormData({ ...formData, [e.target.id]: e.target.value });
-    console.log(formData);
   };
 
   const closeModal = () => {
@@ -141,7 +120,7 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                     Prenom
                   </label>
                   <input
-                    className="appearance-none block w-full border bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                    className="appearance-none block w-full border bg-transparent-200 text-gray-700 border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="text"
                     required
                     placeholder="Jane"
@@ -218,7 +197,7 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
                   Enregistrer
                 </div>
               </div>
-              {valide && (
+              {valid && (
                 <div className="h-[40px] flex items-center justify-center bg-green-500  bg-opacity-25 rounded mb-10">
                   <p className="text-center text-green-500">
                     Modification Enregistrer

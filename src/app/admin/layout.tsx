@@ -25,7 +25,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return isAdmin ? (
     <div className="flex h-screen bg-gray-100  overflow-hidden">
-      <div className="bg-whitetext-black w-64 border-r-2 border-gray-600  border ">
+      <div className="bg-whitetext-black w-64 border-r-2 border-gray-600 border">
         <div className="p-5 font-semibold">Uber Bagarre</div>
         <ul>
           <li>

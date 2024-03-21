@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 const currentUser = (): User | null => {
   try {
     if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
+      const token = UserService.getToken();
       if (!token || token === undefined || token === "undefined") {
         return null;
       }

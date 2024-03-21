@@ -6,7 +6,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CiHeart } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
 
 interface Props {
   product: Product;
@@ -36,7 +35,7 @@ const Card = ({ product, isInWishlist }: Props) => {
     };
 
     const response = await fetch(
-      "https://api-mystore.onrender.com/wishlist/addItem",
+      `${process.env.NEXT_PUBLIC_API_URL}wishlist/addItem`,
       request
     );
 
@@ -65,7 +64,7 @@ const Card = ({ product, isInWishlist }: Props) => {
     };
 
     const response = await fetch(
-      "https://api-mystore.onrender.com/wishlist/removeItem",
+      `${process.env.NEXT_PUBLIC_API_URL}wishlist/removeItem`,
       request
     );
     if (response.ok) {
