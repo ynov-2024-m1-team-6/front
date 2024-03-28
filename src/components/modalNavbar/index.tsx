@@ -8,13 +8,13 @@ import { MdDashboardCustomize } from "react-icons/md";
 import Modal from "@/components/modalNavbar";
 
 function ModalNavbar() {
-  const admin = UserService.isAdmin();
-  const router = useRouter();
+  //const admin = UserService.isAdmin();
+  //const router = useRouter();
 
-  const logout = () => {
-    UserService.logout();
+  /*const logout = () => {
+    //UserService.logout();
     router.push("/login");
-  };
+  };*/
 
   return (
     <div className="p-4 h-[400px] w-[250px] bg-gray-300 flex flex-col justify-center items-center z-50 rounded-xl">
@@ -49,7 +49,7 @@ function ModalNavbar() {
             <MdDashboardCustomize size={20} />
             Dashboard</a>
         </div>
-        <div className='flex flex-col p-2' onClick={() => logout()}>
+        <div className='flex flex-col p-2' >
           <a href="/logout" className='flex flex-row gap-4'>
             <IoLogOut  size={20} />
             Logout</a>
