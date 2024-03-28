@@ -5,7 +5,10 @@ import Input from "@/components/input";
 import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
 import { User } from "@/models/user";
+import { useAppSelector } from "@/redux/hooks";
+import ProductService from "@/services/productService";
 import UserService from "@/services/userService";
+import AddressValidator from "@/services/validators/addressValidator";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -19,18 +22,65 @@ export default function Index() {
   const [address, setAddress] = useState<string>();
   const [city, setCity] = useState<string>();
   const [zipCode, setZipCode] = useState<string>();
+  const [error, setError] = useState<string | null>();
+  const cart = useAppSelector((state: any) => state.panier.items);
 
-  useEffect(() => {
-    const user = UserService.currentUser();
+  const getUser = async () => {
+    const user = await UserService.getMe();
     if (!user) {
       router.push("login?next=command");
     }
+
     setUser(user);
-  }, [router]);
+  };
 
   useEffect(() => {
-    console.log(user);
+    getUser();
+  }, []);
+
+  useEffect(() => {
+    if (!isModifyingUserAddress && shippingHome) {
+      setError(
+        AddressValidator.isValidAdress(user?.adress, user?.city, user?.city)
+      );
+    } else {
+      setError(AddressValidator.isValidAdress(address, city, zipCode));
+    }
+  }, [
+    address,
+    city,
+    zipCode,
+    shippingHome,
+    isModifyingUserAddress,
+    user?.adress,
+    user?.city,
+    user?.zipCode,
+  ]);
+
+  useEffect(() => {
+    setAddress(user?.adress);
+    setZipCode(user?.zipCode);
+    setCity(user?.city);
   }, [user]);
+
+  const goToStrapi = async () => {
+    const id = await ProductService.getProductsById(cart);
+
+    if (!id) {
+      setError("Une erreur s'est produite");
+      return;
+    }
+
+    console.log({
+      id,
+      address: {
+        address,
+        zipCode,
+        city,
+      },
+      mail: user?.mail,
+    });
+  };
 
   return (
     <>
@@ -61,7 +111,11 @@ export default function Index() {
                   {shippingHome && (
                     <div>
                       <div className="flex gap-2 items-end">
-                        <p>12 rue anatole France</p>
+                        {!isModifyingUserAddress && (
+                          <p>
+                            {user?.adress}, {user?.city}, {user?.zipCode}
+                          </p>
+                        )}
                         <p
                           className="text-sm text-blue-500 underline cursor-pointer"
                           onClick={() =>
@@ -117,12 +171,13 @@ export default function Index() {
                   )}
                 </ul>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-between">
+                <p className="text-red-500">{error}</p>
                 <div className="w-fit">
                   <Button
-                    title="Confimer"
-                    onClick={() => setStep(1)}
-                    disabled={false}
+                    title="Payer"
+                    onClick={() => goToStrapi()}
+                    disabled={error ? true : false}
                   />
                 </div>
               </div>

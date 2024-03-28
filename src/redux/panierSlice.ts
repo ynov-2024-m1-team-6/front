@@ -21,9 +21,12 @@ export const panierSlice = createSlice({
         (item) => item !== action.payload.toString()
       );
     },
+    cleanCart: (state) => {
+      state.items = [];
+    },
   },
 });
 
-export const { addToCart, removeFromCart } = panierSlice.actions;
+export const { addToCart, removeFromCart, cleanCart } = panierSlice.actions;
 
 export default panierSlice.reducer;

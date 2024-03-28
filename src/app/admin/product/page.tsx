@@ -16,7 +16,7 @@ const ProductsPage = () => {
   useEffect(() => {
     const getProducts = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getProducts`,
+        `${process.env.NEXT_PUBLIC_API_URL}products/getProducts`,
         {
           method: "GET",
           headers: {
@@ -53,7 +53,7 @@ const ProductsPage = () => {
 
   const handleDeleteProduct = async (product: Product) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/delete?id=${product.id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}products/delete?id=${product.id}`,
       {
         method: "DELETE",
         headers: {

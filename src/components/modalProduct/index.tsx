@@ -28,7 +28,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
         delete productDataWithoutId.id;
       }
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/create`,
+        `${process.env.NEXT_PUBLIC_API_URL}products/create`,
         {
           method: "POST",
           headers: {
@@ -46,7 +46,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
       } else setError(true);
     } else {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/update?id=${productData.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}products/update?id=${productData.id}`,
         {
           method: "PUT",
           headers: {

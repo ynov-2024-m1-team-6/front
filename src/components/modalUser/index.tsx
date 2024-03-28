@@ -27,7 +27,7 @@ const ModalUser = ({ onClose, isOpen, userData }: Props) => {
 
   const updateData = async (id: number) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}user/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}user/${id}`,
       {
         method: "PUT",
         headers: {

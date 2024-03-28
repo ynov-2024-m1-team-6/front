@@ -30,7 +30,7 @@ function NavBar() {
   };
 
   return (
-    <div className="h-[100px] border-b-2 border-bottom border-black flex justify-between items-center text-black px-8 ">
+    <div className="h-[75px] border-b-2 border-bottom border-black flex justify-between items-center text-black px-8 ">
       <div className="flex gap-8 p-4">
         <a href="/product">Store</a>
         <a href="/contact">Contact</a>
@@ -39,15 +39,8 @@ function NavBar() {
         Uber Bagare
       </a>
       <div className="flex items-center gap-10">
-        <div className="h-[50px] min-w-28 px-4 flex rounded-3xl bg-neutral-200 ">
-          <button className="flex flex-row items-center gap-2">
-            <Image src="/search.svg" alt="Icon 1" width={24} height={24} />
-            <p className="text-[#0D0D0D]">Search</p>
-          </button>
-        </div>
-
         {user ? (
-          <div className="flex gap-8">
+          <div className="flex gap-5">
             <a href="/wishlist" className="flex items-center">
               <Image
                 className="cursor-pointer"
@@ -65,14 +58,19 @@ function NavBar() {
                 </div>
               )}
             </a>
+            <div className="h-[50px] w-[50px] flex bg-slate-300 p-3 rounded-full">
+              <a href="/profil">
+                <Image src="/user.svg" alt="Icon 1" width={24} height={24} />
+              </a>
+            </div>{" "}
             {admin ? (
-              <div className="h-[50px] w-[50px] flex bg-slate-300 p-3 rounded-full">
-                <a href="/admin">
-                  <Image src="/user.svg" alt="Icon 1" width={24} height={24} />
-                </a>
+              <div className="flex bg-slate-300 p-3 rounded-full">
+                <a href="/admin">Admin</a>
               </div>
-            ) : null}
-            <div className="h-[50px] w-[50px] flex bg-red-500 p-3 rounded-full">
+            ) : (
+              ""
+            )}
+            <div className="h-[50px] w-[50px] flex bg-red-500 justify-center items-center p-3 rounded-full">
               <IoIosLogOut
                 className="flex items-center cursor-pointer"
                 onClick={() => logout()}
