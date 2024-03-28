@@ -16,7 +16,6 @@ const ProductsPage = () => {
 
   const getProducts = async () => {
     const products = await ProductService.getProducts(false);
-    console.log(products);
     if (products) {
       setProductsData(products);
     }
@@ -73,6 +72,7 @@ const ProductsPage = () => {
               .includes(searchTerm.toLowerCase()) ||
             product.thumbnail.toLowerCase().includes(searchTerm.toLowerCase())
         );
+
   return (
     <div className="p-5">
       <div className="mb-5 flex items-center gap-2">
