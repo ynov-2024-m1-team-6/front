@@ -10,6 +10,7 @@ const UsersPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [usersData, setUserData] = useState<User[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   const fetchDeleteUser = async (id: number) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}user/${id}`, {
@@ -36,16 +37,23 @@ const UsersPage = () => {
     getUser();
   }, []);
 
-  const filteredUsers =
-    searchTerm.length === 0
-      ? usersData
-      : usersData.filter((user) => {
-          user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  useEffect(() => {
+    if (searchTerm.length !== 0) {
+      setFilteredUsers(
+        usersData.filter((user) => {
+          return (
+            user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.mail.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.adress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.city.toLowerCase().includes(searchTerm.toLowerCase());
-        });
+            user.city.toLowerCase().includes(searchTerm.toLowerCase())
+          );
+        })
+      );
+    } else {
+      setFilteredUsers(usersData);
+    }
+  }, [searchTerm, usersData]);
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);

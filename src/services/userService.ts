@@ -54,7 +54,7 @@ const getMe = async (): Promise<User | null> => {
 
     const responseJson = await response.json();
     if (!response.ok) {
-      return responseJson.message;
+      return null;
     }
     return responseJson.data as User;
   } catch (error) {

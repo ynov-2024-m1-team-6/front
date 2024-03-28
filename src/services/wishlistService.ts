@@ -6,6 +6,9 @@ import UserService from "./userService";
 const getWishlist = async (): Promise<Product[] | null> => {
   const token = UserService.getToken();
 
+  if (!token) {
+    return null;
+  }
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}wishlist/getWishlist`,
     {

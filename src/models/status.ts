@@ -1,5 +1,6 @@
 export enum Status {
-  PAID = "paid",
-  REIMBURSEMENT = "reimbursement",
-  REFUNDED = "refunded",
+  PAID = "PAID",
+  REIMBURSEMENT = "REIMBURSEMENT",
+  REFUNDED = "REFUNDED",
+  CREATED = "CREATED",
 }
