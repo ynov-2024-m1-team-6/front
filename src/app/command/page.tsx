@@ -6,6 +6,7 @@ import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
 import { User } from "@/models/user";
 import { useAppSelector } from "@/redux/hooks";
+import PaymentService from "@/services/paymentService";
 import ProductService from "@/services/productService";
 import UserService from "@/services/userService";
 import AddressValidator from "@/services/validators/addressValidator";
@@ -43,6 +44,9 @@ export default function Index() {
       setError(
         AddressValidator.isValidAdress(user?.adress, user?.city, user?.city)
       );
+      setAddress(user?.adress);
+      setCity(user?.city);
+      setZipCode(user?.zipCode);
     } else {
       setError(AddressValidator.isValidAdress(address, city, zipCode));
     }
@@ -58,28 +62,36 @@ export default function Index() {
   ]);
 
   useEffect(() => {
+    if (isModifyingUserAddress || !shippingHome) {
+      setAddress("");
+      setCity("");
+      setZipCode("");
+    }
+  }, [isModifyingUserAddress, shippingHome]);
+
+  useEffect(() => {
     setAddress(user?.adress);
     setZipCode(user?.zipCode);
     setCity(user?.city);
   }, [user]);
 
-  const goToStrapi = async () => {
-    const id = await ProductService.getProductsById(cart);
+  const payment = async () => {
+    const products = await ProductService.getProductsById(cart);
 
-    if (!id) {
-      setError("Une erreur s'est produite");
+    if (!products) {
+      setError("Votre panier est vide");
       return;
     }
 
-    console.log({
-      id,
-      address: {
-        address,
-        zipCode,
-        city,
-      },
-      mail: user?.mail,
-    });
+    try {
+      PaymentService.pay(
+        user?.mail!,
+        products.map((product) => product.id!),
+        { address, zipCode, city }
+      );
+    } catch (error) {
+      setError("Une erreur s'est produite");
+    }
   };
 
   return (
@@ -176,7 +188,7 @@ export default function Index() {
                 <div className="w-fit">
                   <Button
                     title="Payer"
-                    onClick={() => goToStrapi()}
+                    onClick={() => payment()}
                     disabled={error ? true : false}
                   />
                 </div>

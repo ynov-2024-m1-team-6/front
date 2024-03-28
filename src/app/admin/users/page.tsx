@@ -12,32 +12,26 @@ const UsersPage = () => {
   const [usersData, setUserData] = useState<User[]>([]);
 
   const fetchDeleteUser = async (id: number) => {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}user/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${UserService.getToken()}`,
-        },
-      }
-    );
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}user/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${UserService.getToken()}`,
+      },
+    });
     const data = await res.json();
     setUserData(usersData.filter((user) => user.id !== id));
   };
 
   useEffect(() => {
     const getUser = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}user`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${UserService.getToken()}`,
-          },
-        }
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}user/admin`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${UserService.getToken()}`,
+        },
+      });
       const usersData = await res.json();
-      return setUserData(usersData.data);
+      setUserData(usersData.data);
     };
     getUser();
   }, []);
@@ -45,15 +39,13 @@ const UsersPage = () => {
   const filteredUsers =
     searchTerm.length === 0
       ? usersData
-      : usersData.filter(
-          (user) =>
-            user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      : usersData.filter((user) => {
+          user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.mail.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.adress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.zipCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.city.toLowerCase().includes(searchTerm.toLowerCase())
-        );
+            user.city.toLowerCase().includes(searchTerm.toLowerCase());
+        });
 
   const handleEditUser = (user: User) => {
     setSelectedUser(user);
@@ -85,36 +77,37 @@ const UsersPage = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredUsers.map((user) => (
-              <tr key={user.id} className="hover:bg-gray-100 group">
-                <td className="p-3 whitespace-nowrap">{user.name}</td>
-                <td className="p-3 whitespace-nowrap">{user.firstName}</td>
-                <td className="p-3 whitespace-nowrap">{user.mail}</td>
-                <td className="p-3 whitespace-nowrap">{user.adress}</td>
-                <td className="p-3 whitespace-nowrap">{user.zipCode}</td>
-                <td className="p-3 whitespace-nowrap">{user.city}</td>
-                <td className="p-3">
-                  <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <button
-                      className="p-2 text-blue-500 hover:text-blue-700 hover:bg-gray-300 rounded-full relative"
-                      onClick={() => handleEditUser(user)}
-                    >
-                      <span className="flex items-center justify-center">
-                        <FiEdit2 />
-                      </span>
-                    </button>
-                    <button
-                      className="p-2 text-red-500 hover:text-red-700 hover:bg-gray-300 rounded-full relative"
-                      onClick={() => fetchDeleteUser(user.id)}
-                    >
-                      <span className="flex items-center justify-center">
-                        <FiTrash2 />
-                      </span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {filteredUsers &&
+              filteredUsers.map((user) => (
+                <tr key={user.id} className="hover:bg-gray-100 group">
+                  <td className="p-3 whitespace-nowrap">{user.name}</td>
+                  <td className="p-3 whitespace-nowrap">{user.firstName}</td>
+                  <td className="p-3 whitespace-nowrap">{user.mail}</td>
+                  <td className="p-3 whitespace-nowrap">{user.adress}</td>
+                  <td className="p-3 whitespace-nowrap">{user.zipCode}</td>
+                  <td className="p-3 whitespace-nowrap">{user.city}</td>
+                  <td className="p-3">
+                    <div className="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <button
+                        className="p-2 text-blue-500 hover:text-blue-700 hover:bg-gray-300 rounded-full relative"
+                        onClick={() => handleEditUser(user)}
+                      >
+                        <span className="flex items-center justify-center">
+                          <FiEdit2 />
+                        </span>
+                      </button>
+                      <button
+                        className="p-2 text-red-500 hover:text-red-700 hover:bg-gray-300 rounded-full relative"
+                        onClick={() => fetchDeleteUser(user.id)}
+                      >
+                        <span className="flex items-center justify-center">
+                          <FiTrash2 />
+                        </span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
         <Modal
