@@ -31,11 +31,13 @@ export default function Index() {
     if (!user) {
       router.push("login?next=command");
     }
-
     setUser(user);
   };
 
   useEffect(() => {
+    if (!cart.length) {
+      router.push("/cart");
+    }
     getUser();
   }, []);
 

@@ -73,7 +73,7 @@ export default function Index() {
             <Button
               title="Commander"
               onClick={() => router.push("/command")}
-              disabled={false}
+              disabled={cart.length <= 0}
             />
           </div>
         </div>

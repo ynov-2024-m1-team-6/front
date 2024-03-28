@@ -3,8 +3,9 @@ import { Status } from "./status";
 
 export interface Command {
   id: number;
-  number: string;
+  orderNumber: string;
   products: Product[];
   date: Date;
   status: Status;
+  email: string;
 }
