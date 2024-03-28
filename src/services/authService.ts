@@ -49,17 +49,6 @@ const register = async (
     phoneNumber = phoneNumber.replace(/^0+/, "");
     zipCode = zipCode.replace(/^0+/, "");
 
-    console.log({
-      mail,
-      password,
-      firstName,
-      name,
-      adress,
-      city,
-      zipCode,
-      phoneNumber,
-    });
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}auth/register`,
       {
@@ -84,7 +73,6 @@ const register = async (
     if (!response.ok) {
       return responseJson.message;
     }
-    console.log(responseJson);
 
     localStorage.setItem("token", responseJson.data);
     return null;

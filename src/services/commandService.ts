@@ -27,10 +27,8 @@ const askForReimbursment = async (
       },
     }
   );
-  console.log(res);
 
   const commands = await res.json();
-  console.log(commands);
   return commands.data as Command[];
 };
 
