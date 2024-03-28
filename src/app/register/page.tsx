@@ -35,6 +35,7 @@ export default function Index() {
   }, [isConnected, router, isLoading]);
 
   const onSubmit = async () => {
+    setIsLoading(true);
     const error = connectionValidators.isRegisterFormValid({
       firstname,
       lastname: name,
@@ -44,6 +45,7 @@ export default function Index() {
 
     if (error) {
       setError(error);
+      setIsLoading(false);
       return;
     }
 

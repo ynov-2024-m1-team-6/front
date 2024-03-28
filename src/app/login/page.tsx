@@ -2,6 +2,8 @@
 
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { useAppDispatch } from "@/redux/hooks";
+import { cleanCart } from "@/redux/panierSlice";
 import AuthService from "@/services/authService";
 import UserService from "@/services/userService";
 import connectionValidators from "@/services/validators/connectionValidator";
@@ -14,6 +16,7 @@ export default function Index() {
   const [error, setError] = useState<string | null>();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const dispatch = useAppDispatch();
 
   const [isConnected, setIsConnected] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -50,6 +53,7 @@ export default function Index() {
         if (next) {
           router.push(`/${next}`);
         } else {
+          dispatch(cleanCart());
           router.push("/");
         }
       }

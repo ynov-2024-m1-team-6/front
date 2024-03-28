@@ -5,6 +5,8 @@ import Input from "@/components/input";
 import Footer from "@/layout/footer";
 import NavBar from "@/layout/navbar";
 import { User } from "@/models/user";
+import { useAppSelector } from "@/redux/hooks";
+import ProductService from "@/services/productService";
 import UserService from "@/services/userService";
 import AddressValidator from "@/services/validators/addressValidator";
 import { useRouter } from "next/navigation";
@@ -21,6 +23,7 @@ export default function Index() {
   const [city, setCity] = useState<string>();
   const [zipCode, setZipCode] = useState<string>();
   const [error, setError] = useState<string | null>();
+  const cart = useAppSelector((state: any) => state.panier.items);
 
   const getUser = async () => {
     const user = await UserService.getMe();
@@ -29,18 +32,11 @@ export default function Index() {
     }
 
     setUser(user);
-    setAddress(user?.adress);
-    setAddress(user?.city);
-    setAddress(user?.zipCode);
   };
 
   useEffect(() => {
     getUser();
   }, []);
-
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
 
   useEffect(() => {
     if (!isModifyingUserAddress && shippingHome) {
@@ -60,6 +56,31 @@ export default function Index() {
     user?.city,
     user?.zipCode,
   ]);
+
+  useEffect(() => {
+    setAddress(user?.adress);
+    setZipCode(user?.zipCode);
+    setCity(user?.city);
+  }, [user]);
+
+  const goToStrapi = async () => {
+    const id = await ProductService.getProductsById(cart);
+
+    if (!id) {
+      setError("Une erreur s'est produite");
+      return;
+    }
+
+    console.log({
+      id,
+      address: {
+        address,
+        zipCode,
+        city,
+      },
+      mail: user?.mail,
+    });
+  };
 
   return (
     <>
@@ -154,8 +175,8 @@ export default function Index() {
                 <p className="text-red-500">{error}</p>
                 <div className="w-fit">
                   <Button
-                    title="Confimer"
-                    onClick={() => setStep(1)}
+                    title="Payer"
+                    onClick={() => goToStrapi()}
                     disabled={error ? true : false}
                   />
                 </div>
