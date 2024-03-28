@@ -7,17 +7,26 @@ import { Status } from "@/models/status";
 import CommandService from "@/services/commandService";
 
 const CommandsPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchName, setSearchName] = useState("email");
+  const [searchValue, setSearchValue] = useState("");
   const [commands, setCommands] = useState<Command[]>([]);
 
   const getCommands = async () => {
-    const commands = await CommandService.getAllCommands();
-    if (commands) {
-      setCommands(commands);
+    const allCommands = await CommandService.getAllCommands();
+    if (allCommands) {
+      setCommands(allCommands);
     }
   };
 
-  const filterCommands = () => {};
+  const filterCommands = async () => {
+    const filteredCommands = await CommandService.getFilteredCommands(
+      searchName,
+      searchValue
+    );
+    if (filteredCommands) {
+      setCommands(filteredCommands);
+    }
+  };
 
   useEffect(() => {
     getCommands();
@@ -26,7 +35,7 @@ const CommandsPage = () => {
   return (
     <div className="p-5">
       <div className="mb-5 flex items-center gap-2">
-        <select>
+        <select onChange={(e) => setSearchName(e.target.value)}>
           <option value="email">Email</option>
           <option value="orderNumber">Numéro de commande</option>
           <option value="userId">Id d&apos;utilisateur</option>
@@ -36,9 +45,12 @@ const CommandsPage = () => {
           type="text"
           placeholder="Rechercher..."
           className="p-2 border border-gray-300 rounded-lg flex-1"
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchValue(e.target.value)}
         />
-        <FiSearch className="text-gray-400" onClick={() => filterCommands()} />
+        <FiSearch
+          className="text-gray-400 cursor-pointer"
+          onClick={() => filterCommands()}
+        />
       </div>
       <div className="overflow-x-auto rounded-lg border border--2">
         <table className="w-full text-left rounded-lg overflow-hidden">

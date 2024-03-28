@@ -28,6 +28,8 @@ export default function Index() {
 
   const getUser = async () => {
     const user = await UserService.getMe();
+    console.log(user);
+
     if (!user) {
       router.push("login?next=command");
     }

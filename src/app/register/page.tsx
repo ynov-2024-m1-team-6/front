@@ -2,10 +2,12 @@
 
 import Button from "@/components/button";
 import Input from "@/components/input";
+import { useAppDispatch } from "@/redux/hooks";
+import { cleanCart } from "@/redux/panierSlice";
 import AuthService from "@/services/authService";
 import UserService from "@/services/userService";
 import connectionValidators from "@/services/validators/connectionValidator";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Index() {
@@ -19,6 +21,9 @@ export default function Index() {
   const [phoneNumber, setPhoneNumber] = useState<string>();
   const [error, setError] = useState<string | null>();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const next = searchParams.get("next") ?? "";
+  const dispatch = useAppDispatch();
 
   const [isConnected, setIsConnected] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -65,7 +70,12 @@ export default function Index() {
         setError(err);
         setIsLoading(false);
       } else {
-        router.push("/");
+        if (next) {
+          router.push(`/${next}`);
+        } else {
+          dispatch(cleanCart());
+          router.push("/");
+        }
       }
     } catch {
       setError("Une erreur s'est produite");

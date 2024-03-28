@@ -17,6 +17,7 @@ export default function Index() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
+  const next = searchParams.get("next") ?? "";
 
   const [isConnected, setIsConnected] = useState<Boolean>(false);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -45,7 +46,6 @@ export default function Index() {
     }
 
     try {
-      const next = searchParams.get("next");
       const err = await AuthService.login(email!, password!);
       if (err) {
         setError(err);
@@ -87,7 +87,7 @@ export default function Index() {
         {error && <p className="text-red-600">{error}</p>}
         <p className="mt-5 text-center text-sm text-gray-500">
           <a
-            href="/register"
+            href={`/register?next=${next}`}
             className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500 ml-2"
           >
             S&apos;incrire
