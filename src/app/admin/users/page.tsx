@@ -13,7 +13,7 @@ const UsersPage = () => {
 
   const fetchDeleteUser = async (id: number) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}user/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}user/${id}`,
       {
         method: "DELETE",
         headers: {
@@ -28,7 +28,7 @@ const UsersPage = () => {
   useEffect(() => {
     const getUser = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}user`,
+        `${process.env.NEXT_PUBLIC_API_URL}user`,
         {
           method: "GET",
           headers: {

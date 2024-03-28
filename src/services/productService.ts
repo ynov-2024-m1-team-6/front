@@ -4,7 +4,7 @@ const getProductById = async (
   id: number | string | string[]
 ): Promise<Product | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getProduct?id=${id}`,
+    `${process.env.NEXT_PUBLIC_API_URL}products/getProduct?id=${id}`,
     { method: "GET" }
   );
   if (!response.ok) {
@@ -32,7 +32,7 @@ const getProductsById = async (ids: number[]): Promise<Product[] | null> => {
   });
 
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getSpecificProduct?${params}`,
+    `${process.env.NEXT_PUBLIC_API_URL}products/getSpecificProduct?${params}`,
     { method: "GET" }
   );
   if (!response.ok) {
@@ -51,7 +51,7 @@ const getProductsById = async (ids: number[]): Promise<Product[] | null> => {
 
 const getProducts = async (): Promise<Product[] | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BACK_OFFICE_URL}products/getProducts`,
+    `${process.env.NEXT_PUBLIC_API_URL}products/getProducts`,
     {
       method: "GET",
     }
