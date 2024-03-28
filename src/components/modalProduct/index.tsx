@@ -105,13 +105,13 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke="currentColor"
               className="h-6 w-6"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
@@ -131,7 +131,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                     placeholder="McGregor"
                     required
                     id="username"
-                    defaultValue={username}
+                    defaultValue={username ?? ""}
                     onChange={(e) => (productData.username = e.target.value)}
                   />
                 </div>
@@ -142,7 +142,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                   <input
                     type="checkbox"
                     id="checkbox"
-                    defaultChecked={active}
+                    defaultChecked={active ?? true}
                     onChange={(e) => (productData.active = e.target.checked)}
                     className="relative peer shrink-0 appearance-none w-4 h-4 border-2 border-blue-500 rounded-sm bg-white mt-1 checked:bg-blue-800 checked:border-0"
                   />
@@ -159,7 +159,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                   placeholder="Blalabla..."
                   id="description"
                   onChange={(e) => (productData.description = e.target.value)}
-                  defaultValue={description}
+                  defaultValue={description ?? ""}
                 />
               </div>
               <div className="flex flex-wrap -mx-3 mt-6">
@@ -174,7 +174,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                     required
                     id="price"
                     onChange={(e) => (productData.price = +e.target.value)}
-                    defaultValue={price}
+                    defaultValue={price ?? ""}
                   />
                 </div>
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -187,7 +187,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                     placeholder="10-0"
                     id="ratio"
                     onChange={(e) => (productData.ratio = e.target.value)}
-                    defaultValue={ratio}
+                    defaultValue={ratio ?? ""}
                   />
                 </div>
               </div>
@@ -202,7 +202,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                     placeholder="185cm"
                     id="height"
                     onChange={(e) => (productData.height = +e.target.value)}
-                    defaultValue={height}
+                    defaultValue={height ?? ""}
                   />
                 </div>
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
@@ -213,7 +213,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                     className="appearance-none block w-full bg-transparent-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     type="number"
                     id="weight"
-                    defaultValue={weight}
+                    defaultValue={weight ?? ""}
                     onChange={(e) => (productData.weight = +e.target.value)}
                     placeholder="95kg"
                   />
@@ -229,7 +229,7 @@ const ModalProduct = ({ onClose, isOpen, productData }: Props) => {
                   placeholder="Url of the image"
                   id="thumbnail"
                   onChange={(e) => (productData.thumbnail = e.target.value)}
-                  defaultValue={thumbnail}
+                  defaultValue={thumbnail ?? ""}
                 />
               </div>
 

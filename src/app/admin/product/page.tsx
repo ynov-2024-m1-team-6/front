@@ -6,6 +6,7 @@ import { FiEdit2, FiTrash2, FiSearch } from "react-icons/fi";
 import Modal from "@/components/modalProduct";
 import UserService from "@/services/userService";
 import { Product } from "@/models/product";
+import ProductService from "@/services/productService";
 
 const ProductsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,20 +14,15 @@ const ProductsPage = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [productsData, setProductsData] = useState<Product[]>([]);
 
+  const getProducts = async () => {
+    const products = await ProductService.getProducts(false);
+    console.log(products);
+    if (products) {
+      setProductsData(products);
+    }
+  };
+
   useEffect(() => {
-    const getProducts = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}products/getProducts`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${UserService.getToken()}`,
-          },
-        }
-      );
-      const productsData = await res.json();
-      setProductsData(productsData.data);
-    };
     getProducts();
   }, []);
 

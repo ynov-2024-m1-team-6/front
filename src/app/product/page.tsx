@@ -12,7 +12,7 @@ export default function Index() {
   const [wishlist, setWishlist] = useState<Product[]>();
 
   const getProducts = async () => {
-    const products = await ProductService.getProducts();
+    const products = await ProductService.getProducts(true);
     if (products) {
       setProducts(products);
     }

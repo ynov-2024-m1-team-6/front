@@ -4,6 +4,8 @@ import React, { useEffect, useState } from "react";
 import { FiHome, FiUsers, FiTable } from "react-icons/fi";
 import { usePathname, useRouter } from "next/navigation";
 import UserService from "@/services/userService";
+import { FaShoppingBag } from "react-icons/fa";
+import { IoIosArrowDropleftCircle } from "react-icons/io";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState<Boolean>(false);
@@ -67,6 +69,30 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               >
                 <FiUsers className="mr-2" />
                 <span>Utilisateurs</span>
+              </p>
+            </a>
+          </li>
+          <li>
+            <a href="/admin/commands">
+              <p
+                className={`flex items-center justify-start p-4 rounded-lg m-2 ${
+                  pathname == "/admin/commands"
+                    ? "text-white bg-black"
+                    : "bg-slate-300 text-black"
+                }`}
+              >
+                <FaShoppingBag className="mr-2" />
+                <span>Commandes</span>
+              </p>
+            </a>
+          </li>
+          <li>
+            <a href="/">
+              <p
+                className={`flex items-center justify-start p-4 rounded-lg m-2 text-black bg-gray-50`}
+              >
+                <IoIosArrowDropleftCircle className="mr-2" />
+                <span>Retour au shop</span>
               </p>
             </a>
           </li>

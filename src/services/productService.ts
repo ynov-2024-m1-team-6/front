@@ -50,9 +50,11 @@ const getProductsById = async (ids: number[]): Promise<Product[] | null> => {
   });
 };
 
-const getProducts = async (): Promise<Product[] | null> => {
+const getProducts = async (
+  filterInactive: boolean
+): Promise<Product[] | null> => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}products/getProducts`,
+    `${process.env.NEXT_PUBLIC_API_URL}products/getProducts?filterInactive=${filterInactive}`,
     {
       method: "GET",
     }
